@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Article - Neptune Privacy</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header>
+    <div class="header-container">
+      <a href="index.html" class="logo">Neptune Privacy</a>
+      <nav><ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="articles.html">Articles</a></li>
+        <li><a href="videos.html">Videos</a></li>
+        <li><a href="features.html">Features</a></li>
+        <li><a href="learn.html">Learn</a></li>
+        <li><a href="quiz.html">Quiz</a></li>
+        <li><a href="roadmap.html">Roadmap</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul></nav>
+    </div>
+  </header>
+
+  <main id="articleContent">
+    <p class="text-muted">Loading article…</p>
+  </main>
+
+  <footer>
+    <p><strong>Neptune Privacy</strong> — "Privacy Unchained"</p>
+    <div class="footer-links">
+      <a href="https://twitter.com/NeptunePrivacy" target="_blank">Twitter</a>
+      <a href="https://github.com/neptune-privacy" target="_blank">GitHub</a>
+      <a href="articles.html">Back to Articles</a>
+    </div>
+  </footer>
+
+  <script src="js/articles.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const params = new URLSearchParams(window.location.search);
+      const id = parseInt(params.get('id'));
+      if (!id) {
+        document.getElementById('articleContent').innerHTML = '<a href="articles.html" class="back-link">← Back to Articles</a><p>Article not found.</p>';
+        return;
+      }
+      const article = loadArticles().find(a => a.id === id);
+      if (article) {
+        document.title = article.title + ' - Neptune Privacy';
+        displayArticle(article);
+      } else {
+        document.getElementById('articleContent').innerHTML = '<a href="articles.html" class="back-link">← Back to Articles</a><p>Article not found.</p>';
+      }
+    });
+  </script>
+</body>
+</html>

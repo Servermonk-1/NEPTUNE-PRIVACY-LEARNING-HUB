@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Neptune Privacy Learning Hub</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+  <header>
+    <div class="header-container">
+      <a href="index.html" class="logo">
+        <img src="assets/images/neptunelogo.svg" alt="Neptune Privacy Logo" class="logo-image"
+          onerror="this.style.display='none'">
+        Neptune Privacy
+      </a>
+      <button id="navToggle" class="nav-toggle" aria-label="Open navigation">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      <nav>
+        <ul>
+          <li><a href="index.html" class="active">Home</a></li>
+          <li><a href="articles.html">Articles</a></li>
+          <li><a href="videos.html">Videos</a></li>
+          <li><a href="features.html">Features</a></li>
+          <li><a href="learn.html">Learn</a></li>
+          <li><a href="quiz.html">Quiz</a></li>
+          <li><a href="roadmap.html">Roadmap</a></li>
+          <li><a href="about.html">About</a></li>
+          <li style="margin-left: auto;"><a href="admin.html" class="admin-link" title="THIS IS ONLY FOR ADMINS">Admin</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero -->
+    <section class="epic-hero">
+      <div class="hero-bg-layers"></div>
+      <div class="hero-content">
+        <div class="hero-logo-section">
+          <img src="assets/images/neptunelogo.svg" alt="Neptune Privacy" class="hero-logo"
+            onerror="this.style.display='none'">
+          <div class="logo-glow"></div>
+        </div>
+        <div class="hero-headline">
+          <h1 class="main-title">
+            <span class="title-word word-1">NEPTUNE</span>&nbsp;<span class="title-word word-2">PRIVACY</span><br>
+            <span class="title-word word-3">LEARNING</span>&nbsp;<span class="title-word word-4">HUB</span>
+          </h1>
+        </div>
+        <div class="hero-subtitle">
+          <p>Master the <span class="highlight-text">quantum-safe</span> blockchain where <span
+              class="typing-text"></span></p>
+        </div>
+        <div class="hero-actions">
+          <a href="learn.html" class="epic-cta primary-cta"><span class="cta-text">Start Your Journey</span></a>
+          <a href="about.html" class="epic-cta secondary-cta"><span class="cta-text">Discover More</span></a>
+        </div>
+        <div class="hero-stats">
+          <div class="stat-item">
+            <div class="stat-number" id="articlesCount">0</div>
+            <div class="stat-label">Articles</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number" id="videosCount">0</div>
+            <div class="stat-label">Videos</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Welcome -->
+    <section class="featured-content">
+      <h2 class="section-title">Welcome to the Neptune Privacy Learning Hub</h2>
+      <div class="grid">
+        <div class="card">
+          <h3>Learn at Your Own Pace</h3>
+          <p>Structured learning paths from beginner to advanced. Master Neptune Privacy with our comprehensive
+            educational content.</p>
+          <div class="card-meta"><span class="badge badge-category">Education</span></div>
+        </div>
+        <div class="card">
+          <h3>Expert Community Content</h3>
+          <p>Articles and videos created by Neptune Privacy community experts. Quality content you can trust.</p>
+          <div class="card-meta"><span class="badge badge-category">Community</span></div>
+        </div>
+        <div class="card">
+          <h3>Stay Updated</h3>
+          <p>Get the latest Neptune Privacy news, features, and developments. Your go-to source for everything Neptune.
+          </p>
+          <div class="card-meta"><span class="badge badge-category">Updates</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Featured Articles -->
+    <section class="featured-content">
+      <h2>Featured Articles</h2>
+      <div class="grid">
+        <a href="article.html?id=1" class="card card-link">
+          <div class="card-top-bar bar-beginner"></div>
+          <h3>What is Neptune Privacy?</h3>
+          <p>Learn the fundamentals — the quantum-safe blockchain built for privacy by default.</p>
+          <div class="card-meta"><span class="badge badge-level level-beginner">Beginner</span></div>
+        </a>
+        <a href="article.html?id=3" class="card card-link">
+          <div class="card-top-bar bar-intermediate"></div>
+          <h3>The Quantum Computing Threat</h3>
+          <p>Why quantum resistance matters and how Neptune protects you against future attacks.</p>
+          <div class="card-meta"><span class="badge badge-level level-intermediate">Intermediate</span></div>
+        </a>
+        <a href="article.html?id=5" class="card card-link">
+          <div class="card-top-bar bar-beginner"></div>
+          <h3>Private Smart Contracts</h3>
+          <p>Explore what becomes possible when smart contracts execute privately via Triton VM.</p>
+          <div class="card-meta"><span class="badge badge-level level-beginner">Beginner</span></div>
+        </a>
+      </div>
+    </section>
+
+    <!-- Key Features -->
+    <section class="featured-content">
+      <h2>Key Features</h2>
+      <div class="grid">
+        <div class="card">
+          <h3>Private by Default</h3>
+          <p>Every transaction is automatically private. No settings, no opt-in, no compromises.</p>
+        </div>
+        <div class="card">
+          <h3>Quantum Resistant</h3>
+          <p>Hash-based cryptography designed to withstand quantum-level attacks today and tomorrow.</p>
+        </div>
+        <div class="card">
+          <h3>Proof of Work</h3>
+          <p>GPU-mineable consensus. Anyone can secure the network and earn XNT rewards.</p>
+        </div>
+        <div class="card">
+          <h3>Smart Contracts</h3>
+          <p>Program with full privacy via Triton VM. Inputs, outputs, and logic stay hidden.</p>
+        </div>
+        <div class="card">
+          <h3>Community Governed</h3>
+          <p>No CEO, no VC backing, 100% open source. Neptune is built by and for the community.</p>
+        </div>
+        <div class="card">
+          <h3>Fair Economics</h3>
+          <p>No presale, no insider allocation. 100% of supply beyond premine goes to miners.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Get Started -->
+    <section class="featured-content">
+      <h2>Get Started</h2>
+      <div class="grid">
+        <a href="learn.html" class="card" style="text-decoration:none;color:inherit;">
+          <h3>Start Learning</h3>
+          <p>Beginner → Intermediate → Advanced. Choose your learning path.</p>
+        </a>
+        <a href="articles.html" class="card" style="text-decoration:none;color:inherit;">
+          <h3>Read Articles</h3>
+          <p>Detailed articles about Neptune's technology, economics, and use cases.</p>
+        </a>
+        <a href="videos.html" class="card" style="text-decoration:none;color:inherit;">
+          <h3>Watch Videos</h3>
+          <p>Video guides, tutorials, and explanations of Neptune's core concepts.</p>
+        </a>
+      </div>
+    </section>
+
+    <!-- Feedback -->
+    <section class="featured-content feedback-section">
+      <h2 class="section-title">Send Us Your Feedback</h2>
+      <p class="text-center text-muted mb-md">Help us improve. Your feedback is valuable to the Neptune Privacy
+        community.</p>
+      <form id="feedbackForm" class="feedback-form">
+        <div class="form-group"><input type="text" id="feedbackName" placeholder="Your Name (optional)" maxlength="100">
+        </div>
+        <div class="form-group"><input type="email" id="feedbackEmail" placeholder="Your Email (optional)"
+            maxlength="100"></div>
+        <div class="form-group">
+          <select id="feedbackType" required>
+            <option value="">Select Feedback Type</option>
+            <option value="Bug Report">Bug Report</option>
+            <option value="Feature Request">Feature Request</option>
+            <option value="Suggestion">Suggestion</option>
+            <option value="General">General Feedback</option>
+          </select>
+        </div>
+        <div class="form-group"><textarea id="feedbackMessage" placeholder="Your feedback..." required maxlength="1000"
+            rows="5"></textarea></div>
+        <button type="submit" class="feedback-submit-btn">Send Feedback</button>
+        <div id="feedbackStatus" style="display:none;margin-top:10px;"></div>
+      </form>
+    </section>
+  </main>
+
+  <footer>
+    <p><strong>Neptune Privacy Learning Hub</strong></p>
+    <p>Your comprehensive guide to mastering Neptune Privacy</p>
+    <p style="margin-top:8px;font-size:0.8rem;opacity:0.6;">Built with ❤️ by the Neptune Privacy community</p>
+  </footer>
+
+  <script src="js/articles.js"></script>
+  <script src="js/videos.js"></script>
+  <script src="js/main.js"></script>
+</body>
+
+</html>

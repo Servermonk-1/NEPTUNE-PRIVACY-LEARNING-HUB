@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Articles - Neptune Privacy</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header>
+    <div class="header-container">
+      <a href="index.html" class="logo">Neptune Privacy</a>
+      <nav><ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="articles.html">Articles</a></li>
+        <li><a href="videos.html">Videos</a></li>
+        <li><a href="features.html">Features</a></li>
+        <li><a href="learn.html">Learn</a></li>
+        <li><a href="quiz.html">Quiz</a></li>
+        <li><a href="roadmap.html">Roadmap</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul></nav>
+    </div>
+  </header>
+
+  <main>
+    <h1>Articles</h1>
+    <p class="text-muted mb-md">All Neptune Privacy articles — built-in short guides or long external Twitter reads.</p>
+
+    <div class="filters-container">
+      <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Search articles…">
+      </div>
+      <div class="filter-group">
+        <label>Level:</label>
+        <select id="levelFilter" onchange="updateArticlesDisplay()">
+          <option value="all">All Levels</option>
+          <option value="Beginner">Beginner</option>
+          <option value="Intermediate">Intermediate</option>
+          <option value="Advanced">Advanced</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label>Content Type:</label>
+        <select id="contentFilter" onchange="updateArticlesDisplay()">
+          <option value="all">All Content</option>
+          <option value="short">Short Content</option>
+          <option value="long">Long Content</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="grid" id="articlesGrid"></div>
+  </main>
+
+  <footer>
+    <p><strong>Neptune Privacy</strong> — "Privacy Unchained"</p>
+    <div class="footer-links">
+      <a href="https://twitter.com/NeptunePrivacy" target="_blank">Twitter</a>
+      <a href="https://github.com/neptune-privacy" target="_blank">GitHub</a>
+      <a href="about.html">About Us</a>
+    </div>
+  </footer>
+
+  <script src="js/articles.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', updateArticlesDisplay);
+    window.addEventListener('storage', function(e) {
+      if (e.key === 'neptune_articles' || e.key === 'neptune_articles_updated') updateArticlesDisplay();
+    });
+  </script>
+</body>
+</html>

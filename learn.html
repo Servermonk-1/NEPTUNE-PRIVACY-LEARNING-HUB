@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Learn - Neptune Privacy</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header>
+    <div class="header-container">
+      <a href="index.html" class="logo">Neptune Privacy</a>
+      <nav><ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="articles.html">Articles</a></li>
+        <li><a href="videos.html">Videos</a></li>
+        <li><a href="features.html">Features</a></li>
+        <li><a href="learn.html">Learn</a></li>
+        <li><a href="quiz.html">Quiz</a></li>
+        <li><a href="roadmap.html">Roadmap</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul></nav>
+    </div>
+  </header>
+
+  <main>
+    <h1>Learning Paths</h1>
+    <p class="text-muted mb-md">Choose your journey: Beginner, Intermediate, or Advanced.</p>
+
+    <section class="level-section">
+      <h2><span class="level-indicator">1</span> Beginner</h2>
+      <p class="text-muted">Start here if you're new to Neptune Privacy. No technical background required.</p>
+      <ul class="learn-list" id="beginnerList"></ul>
+    </section>
+
+    <section class="level-section">
+      <h2><span class="level-indicator">2</span> Intermediate</h2>
+      <p class="text-muted">Ready for deeper knowledge? Explore the technology, economics, and concepts behind Neptune.</p>
+      <ul class="learn-list" id="intermediateList"></ul>
+    </section>
+
+    <section class="level-section">
+      <h2><span class="level-indicator">3</span> Advanced</h2>
+      <p class="text-muted">Master the technical details. Deep dives into cryptography, architecture, and development.</p>
+      <ul class="learn-list" id="advancedList"></ul>
+    </section>
+  </main>
+
+  <footer>
+    <p><strong>Neptune Privacy</strong> — "Privacy Unchained"</p>
+    <div class="footer-links">
+      <a href="https://twitter.com/NeptunePrivacy" target="_blank">Twitter</a>
+      <a href="https://github.com/neptune-privacy" target="_blank">GitHub</a>
+      <a href="about.html">About Us</a>
+    </div>
+  </footer>
+
+  <script src="js/articles.js"></script>
+  <script src="js/videos.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      function buildList(articles, vids) {
+        let html = '';
+        articles.forEach(a => { html += `<li><a href="article.html?id=${a.id}">📖 ${a.title}</a></li>`; });
+        vids.forEach(v    => { html += `<li><a href="videos.html">🎥 ${v.title}</a></li>`; });
+        return html || '<li><p class="text-muted">No content yet for this level.</p></li>';
+      }
+      document.getElementById('beginnerList').innerHTML     = buildList(filterArticles('Beginner'),     filterVideos('Beginner'));
+      document.getElementById('intermediateList').innerHTML = buildList(filterArticles('Intermediate'), filterVideos('Intermediate'));
+      document.getElementById('advancedList').innerHTML     = buildList(filterArticles('Advanced'),     filterVideos('Advanced'));
+    });
+  </script>
+</body>
+</html>
