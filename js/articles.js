@@ -214,21 +214,40 @@ const DEFAULT_ARTICLES = [
 ];
 
 // ============================================================
-// loadArticles() — merges default articles with localStorage
+// loadArticles() — merges default articles with localStorage and Firebase
 // This is the ONLY function all pages should use to get articles.
 // ============================================================
+let FIREBASE_ARTICLES = [];
+
+async function loadFirebaseArticlesIfAvailable() {
+  if (typeof loadFirebaseArticles !== 'function') return;
+  try {
+    FIREBASE_ARTICLES = await loadFirebaseArticles();
+  } catch (error) {
+    console.error('Firebase articles could not be loaded:', error);
+    FIREBASE_ARTICLES = [];
+  }
+}
+
 function loadArticles() {
   const saved = JSON.parse(localStorage.getItem('neptune_articles') || '[]');
 
   // Build a map of default articles by id for O(1) lookup
   const defaultMap = {};
   DEFAULT_ARTICLES.forEach(a => { defaultMap[a.id] = a; });
+  FIREBASE_ARTICLES.forEach(a => { defaultMap[a.id] = a; });
 
-  // Saved articles can override defaults (same id) or be new
+  // Saved articles can override defaults and Firebase entries (same id) or be new
   saved.forEach(a => { defaultMap[a.id] = a; });
 
   // Return as array, sorted by id
-  return Object.values(defaultMap).sort((a, b) => a.id - b.id);
+  return Object.values(defaultMap).sort((a, b) => {
+    const ida = typeof a.id === 'string' && !isNaN(a.id) ? Number(a.id) : a.id;
+    const idb = typeof b.id === 'string' && !isNaN(b.id) ? Number(b.id) : b.id;
+    if (ida == null) return 1;
+    if (idb == null) return -1;
+    return ida > idb ? 1 : (ida < idb ? -1 : 0);
+  });
 }
 
 // Convenience helpers used by other pages

@@ -1,11 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin - Neptune Privacy</title>
   <link rel="stylesheet" href="css/style.css">
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.2/firebase-firestore-compat.js"></script>
 </head>
+
 <body>
 
   <!-- Login -->
@@ -13,7 +18,8 @@
     <div class="login-form">
       <h2>Admin Access</h2>
       <p class="text-muted">Enter password to manage content</p>
-      <input type="password" id="adminPassword" placeholder="Admin password" onkeypress="if(event.key==='Enter')login()">
+      <input type="password" id="adminPassword" placeholder="Admin password"
+        onkeypress="if(event.key==='Enter')login()">
       <button class="login-button" onclick="login()">Access Panel</button>
       <div id="loginError" class="login-error" style="display:none;">Incorrect password. Try again.</div>
     </div>
@@ -26,14 +32,19 @@
     <header>
       <div class="header-container">
         <a href="index.html" class="logo">Neptune Privacy</a>
-        <nav><ul>
-          <li><a href="index.html">Home</a></li>
-          <li><a href="articles.html">Articles</a></li>
-          <li><a href="videos.html">Videos</a></li>
-          <li><a href="quiz.html">Quiz</a></li>
-          <li><a href="roadmap.html">Roadmap</a></li>
-          <li><a href="about.html">About</a></li>
-        </ul></nav>
+        <nav>
+          <button id="navToggle" class="nav-toggle" aria-label="Open navigation">
+            <span></span><span></span><span></span>
+          </button>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="articles.html">Articles</a></li>
+            <li><a href="videos.html">Videos</a></li>
+            <li><a href="quiz.html">Quiz</a></li>
+            <li><a href="roadmap.html">Roadmap</a></li>
+            <li><a href="about.html">About</a></li>
+          </ul>
+        </nav>
       </div>
     </header>
 
@@ -45,12 +56,14 @@
         </div>
 
         <div class="instructions">
-          <h3>📋 How It Works</h3>
+          <h3>📋 Firebase Setup Required</h3>
           <ul>
-            <li>Articles saved here appear <strong>immediately</strong> on the Articles and Learn pages</li>
-            <li>Choose <strong>Normal Article</strong> to write full content, or <strong>Twitter Link</strong> to link to a tweet</li>
-            <li>Articles are stored in your browser's localStorage and merged with the default articles</li>
-            <li>To make articles permanent across browsers, copy the JS objects into <code>js/articles.js</code></li>
+            <li><strong>Before using admin panel:</strong> Set up <a href="https://console.firebase.google.com"
+                target="_blank">Firebase project</a></li>
+            <li>Create a Firestore database (Start in test mode)</li>
+            <li>Copy your Firebase config credentials</li>
+            <li>Paste them into <code>js/firebase-config.js</code> (API Key, Project ID, etc.)</li>
+            <li>Articles are now stored in Firestore and visible to <strong>all visitors globally</strong></li>
           </ul>
         </div>
 
@@ -105,7 +118,8 @@
               <div class="form-group">
                 <label>Twitter / X URL *</label>
                 <input type="text" id="articleUrl" placeholder="https://twitter.com/username/status/…">
-                <small style="color:var(--text-subtle);font-size:0.82rem;margin-top:4px;display:block;">Paste the full Twitter/X post URL</small>
+                <small style="color:var(--text-subtle);font-size:0.82rem;margin-top:4px;display:block;">Paste the full
+                  Twitter/X post URL</small>
               </div>
             </div>
 
@@ -114,14 +128,17 @@
               <div class="form-group">
                 <label>Content *</label>
                 <div class="formatting-toolbar">
-                  <button type="button" class="format-btn" onclick="fmt('bold')"      title="Bold"><strong>B</strong></button>
-                  <button type="button" class="format-btn" onclick="fmt('italic')"    title="Italic"><em>I</em></button>
-                  <button type="button" class="format-btn" onclick="fmt('underline')" title="Underline"><u>U</u></button>
-                  <button type="button" class="format-btn" onclick="fmt('h2')"        title="Heading">&lt;h2&gt;</button>
-                  <button type="button" class="format-btn" onclick="fmt('h3')"        title="Subheading">&lt;h3&gt;</button>
-                  <button type="button" class="format-btn" onclick="fmt('li')"        title="List item">• li</button>
+                  <button type="button" class="format-btn" onclick="fmt('bold')"
+                    title="Bold"><strong>B</strong></button>
+                  <button type="button" class="format-btn" onclick="fmt('italic')" title="Italic"><em>I</em></button>
+                  <button type="button" class="format-btn" onclick="fmt('underline')"
+                    title="Underline"><u>U</u></button>
+                  <button type="button" class="format-btn" onclick="fmt('h2')" title="Heading">&lt;h2&gt;</button>
+                  <button type="button" class="format-btn" onclick="fmt('h3')" title="Subheading">&lt;h3&gt;</button>
+                  <button type="button" class="format-btn" onclick="fmt('li')" title="List item">• li</button>
                 </div>
-                <textarea id="articleContent" placeholder="Write your article content here. HTML is supported." style="min-height:280px;"></textarea>
+                <textarea id="articleContent" placeholder="Write your article content here. HTML is supported."
+                  style="min-height:280px;"></textarea>
               </div>
             </div>
 
@@ -133,14 +150,18 @@
         <!-- Article list -->
         <div class="articles-list">
           <h2>All Articles</h2>
-          <div id="articlesList"><p class="text-muted">Loading…</p></div>
+          <div id="articlesList">
+            <p class="text-muted">Loading…</p>
+          </div>
         </div>
 
         <!-- Feedback -->
         <div class="articles-list" style="margin-top:32px;">
           <h2>User Feedback</h2>
           <p class="text-muted mb-md">Feedback submitted from the homepage.</p>
-          <div id="feedbackContainer" class="feedback-list"><p class="text-muted">Loading…</p></div>
+          <div id="feedbackContainer" class="feedback-list">
+            <p class="text-muted">Loading…</p>
+          </div>
         </div>
       </div>
     </main>
@@ -150,14 +171,32 @@
     </footer>
   </div>
 
+  <script src="js/firebase-config.js"></script>
+  <script src="js/main.js"></script>
   <script src="js/articles.js"></script>
   <script>
     const ADMIN_PASSWORD = 'Neptune2026';
     let editingId = null;
 
+    async function loadFirebaseAdminArticles() {
+      if (typeof loadFirebaseArticlesIfAvailable === 'function') {
+        await loadFirebaseArticlesIfAvailable();
+      }
+      renderList();
+    }
+
+    async function init() {
+      if (!sessionStorage.getItem('adminAuth')) return;
+      document.getElementById('mainContent').classList.add('authenticated');
+      document.getElementById('articleForm').addEventListener('submit', handleSubmit);
+      toggleFields();
+      await loadFirebaseAdminArticles();
+      renderFeedback();
+    }
+
     // ── Auth ───────────────────────────────────────────────
     function login() {
-      const pw  = document.getElementById('adminPassword').value;
+      const pw = document.getElementById('adminPassword').value;
       const err = document.getElementById('loginError');
       if (pw === ADMIN_PASSWORD) {
         sessionStorage.setItem('adminAuth', '1');
@@ -171,7 +210,7 @@
       }
     }
 
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
       if (sessionStorage.getItem('adminAuth') === '1') {
         document.getElementById('loginOverlay').style.display = 'none';
         document.getElementById('mainContent').classList.add('authenticated');
@@ -181,21 +220,13 @@
       }
     });
 
-    // ── Init ───────────────────────────────────────────────
-    function init() {
-      document.getElementById('articleForm').addEventListener('submit', handleSubmit);
-      toggleFields();
-      renderList();
-      renderFeedback();
-    }
-
     // ── Field visibility ───────────────────────────────────
     function toggleFields() {
       const type = document.getElementById('articleType').value;
       document.getElementById('twitterFields').style.display = type === 'twitter' ? 'block' : 'none';
-      document.getElementById('articleFields').style.display = type === 'article'  ? 'block' : 'none';
-      document.getElementById('articleContent').required  = type === 'article';
-      document.getElementById('articleUrl').required      = type === 'twitter';
+      document.getElementById('articleFields').style.display = type === 'article' ? 'block' : 'none';
+      document.getElementById('articleContent').required = type === 'article';
+      document.getElementById('articleUrl').required = type === 'twitter';
     }
 
     // ── Format helpers ─────────────────────────────────────
@@ -203,34 +234,36 @@
       const ta = document.getElementById('articleContent');
       const s = ta.selectionStart, e = ta.selectionEnd;
       const sel = ta.value.slice(s, e);
-      const tags = { bold: ['<strong>','</strong>'], italic: ['<em>','</em>'], underline: ['<u>','</u>'],
-                     h2: ['<h2>','</h2>'], h3: ['<h3>','</h3>'], li: ['<li>','</li>'] };
-      const [o, c] = tags[cmd] || ['',''];
+      const tags = {
+        bold: ['<strong>', '</strong>'], italic: ['<em>', '</em>'], underline: ['<u>', '</u>'],
+        h2: ['<h2>', '</h2>'], h3: ['<h3>', '</h3>'], li: ['<li>', '</li>']
+      };
+      const [o, c] = tags[cmd] || ['', ''];
       const rep = o + sel + c;
-      ta.value = ta.value.slice(0,s) + rep + ta.value.slice(e);
+      ta.value = ta.value.slice(0, s) + rep + ta.value.slice(e);
       ta.focus();
       ta.setSelectionRange(s + rep.length, s + rep.length);
     }
 
     // ── Save ───────────────────────────────────────────────
-    function handleSubmit(e) {
+    async function handleSubmit(e) {
       e.preventDefault();
-      const type     = document.getElementById('articleType').value;
-      const title    = document.getElementById('articleTitle').value.trim();
-      const excerpt  = document.getElementById('articleExcerpt').value.trim();
-      const level    = document.getElementById('articleLevel').value;
+      const type = document.getElementById('articleType').value;
+      const title = document.getElementById('articleTitle').value.trim();
+      const excerpt = document.getElementById('articleExcerpt').value.trim();
+      const level = document.getElementById('articleLevel').value;
       const category = document.getElementById('articleCategory').value;
 
       if (!type || !title || !excerpt || !level) { notify('Fill in all required fields.', 'error'); return; }
 
       const article = {
-        id:       editingId || Date.now(),
+        id: editingId || Date.now(),
         type,
         title,
         excerpt,
         level,
         category,
-        date:     new Date().toISOString().split('T')[0]
+        date: new Date().toISOString().split('T')[0]
       };
 
       if (type === 'twitter') {
@@ -245,9 +278,18 @@
         article.content = content;
       }
 
-      // Save to localStorage
+      if (typeof saveArticleToFirebase === 'function') {
+        try {
+          const firebaseId = await saveArticleToFirebase(article);
+          article.firebaseId = firebaseId;
+        } catch (error) {
+          console.error(error);
+          notify('Saved locally, but Firebase upload failed. Check your config.', 'error');
+        }
+      }
+
       const saved = JSON.parse(localStorage.getItem('neptune_articles') || '[]');
-      const idx   = saved.findIndex(a => a.id === article.id);
+      const idx = saved.findIndex(a => a.id === article.id);
       if (idx >= 0) saved[idx] = article;
       else saved.push(article);
       localStorage.setItem('neptune_articles', JSON.stringify(saved));
@@ -260,7 +302,7 @@
 
     // ── Render list ────────────────────────────────────────
     function renderList() {
-      const all = loadArticles(); // uses merged default + localStorage
+      const all = loadArticles();
       const container = document.getElementById('articlesList');
       if (!all.length) { container.innerHTML = '<p class="text-muted">No articles yet. Add one above.</p>'; return; }
       container.innerHTML = all.map(a => `
@@ -282,21 +324,31 @@
       const article = loadArticles().find(a => a.id === id);
       if (!article) return;
       editingId = id;
-      document.getElementById('articleType').value    = article.type    || 'article';
-      document.getElementById('articleId').value      = id;
-      document.getElementById('articleTitle').value   = article.title;
+      document.getElementById('articleType').value = article.type || 'article';
+      document.getElementById('articleId').value = id;
+      document.getElementById('articleTitle').value = article.title;
       document.getElementById('articleExcerpt').value = article.excerpt;
-      document.getElementById('articleLevel').value   = article.level;
+      document.getElementById('articleLevel').value = article.level;
       document.getElementById('articleCategory').value = article.category || '';
       document.getElementById('articleContent').value = article.content || '';
-      document.getElementById('articleUrl').value     = article.url     || '';
+      document.getElementById('articleUrl').value = article.url || '';
       toggleFields();
       document.querySelector('.admin-form').scrollIntoView({ behavior: 'smooth' });
     }
 
     // ── Delete ─────────────────────────────────────────────
-    function deleteArticle(id) {
+    async function deleteArticle(id) {
       if (!confirm('Delete this article?')) return;
+      const article = loadArticles().find(a => a.id === id);
+      if (article && article.firebaseId && typeof deleteArticleFromFirebase === 'function') {
+        try {
+          await deleteArticleFromFirebase(article.firebaseId);
+        } catch (error) {
+          console.error(error);
+          notify('Deleted locally, but Firebase delete failed.', 'error');
+        }
+      }
+
       const saved = JSON.parse(localStorage.getItem('neptune_articles') || '[]');
       localStorage.setItem('neptune_articles', JSON.stringify(saved.filter(a => a.id !== id)));
       localStorage.setItem('neptune_articles_updated', Date.now());
@@ -318,7 +370,7 @@
       const container = document.getElementById('feedbackContainer');
       const all = JSON.parse(localStorage.getItem('neptune_feedback') || '[]');
       if (!all.length) { container.innerHTML = '<p class="no-feedback">No feedback yet.</p>'; return; }
-      container.innerHTML = all.sort((a,b) => b.id - a.id).map(f => `
+      container.innerHTML = all.sort((a, b) => b.id - a.id).map(f => `
         <div class="feedback-item">
           <div class="feedback-item-header">
             <div>
@@ -349,4 +401,5 @@
     }
   </script>
 </body>
+
 </html>

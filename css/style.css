@@ -4,7 +4,7 @@
    Fonts: Syne (display) + DM Sans (body)
    ============================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap');
 
 /* ── CSS Variables ────────────────────────────────────────── */
 :root {
@@ -38,8 +38,8 @@
 
   --transition:     0.25s cubic-bezier(0.4,0,0.2,1);
 
-  --font-display:   'Syne', sans-serif;
-  --font-body:      'DM Sans', sans-serif;
+  --font-display:   'Montserrat', sans-serif;
+  --font-body:      'Inter', sans-serif;
 
   --header-h:       68px;
   --max-w:          1160px;
@@ -99,7 +99,7 @@ header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 20px;
+  gap: 40px;
   position: relative;
 }
 .logo {
@@ -109,19 +109,28 @@ header {
   color: var(--white) !important;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
   text-decoration: none !important;
   letter-spacing: 0em;
   position: relative;
   z-index: 10;
   transition: opacity var(--transition);
+  line-height: 1;
+  height: 100%;
+  white-space: nowrap;
+  margin-left: -20px;
+  padding-left: 20px;
 }
 .logo:hover {
   opacity: 0.9;
 }
 .logo-image {
-  height: 36px;
+  height: 32px;
   width: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
   /* Remove the filter that might be causing visibility issues */
   /* filter: brightness(0) invert(1); */
 }
@@ -131,14 +140,14 @@ header {
 nav ul {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 12px;
 }
 nav ul li a {
   font-family: var(--font-body);
   font-weight: 500;
   font-size: var(--text-base);
   color: var(--text-muted);
-  padding: 12px 18px;
+  padding: 12px 20px;
   border-radius: var(--radius-sm);
   transition: color var(--transition), background var(--transition);
   text-decoration: none;
@@ -1568,6 +1577,8 @@ input[readonly] { opacity: 0.5; cursor: not-allowed; }
   .logo {
     font-size: var(--text-lg);
     gap: 8px;
+    margin-left: -16px;
+    padding-left: 16px;
   }
 
   .logo-image {
@@ -1696,6 +1707,8 @@ input[readonly] { opacity: 0.5; cursor: not-allowed; }
   .logo {
     font-size: var(--text-base);
     gap: 6px;
+    margin-left: -12px;
+    padding-left: 12px;
   }
 
   .logo-image {
