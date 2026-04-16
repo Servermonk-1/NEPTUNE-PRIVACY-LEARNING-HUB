@@ -217,6 +217,7 @@ const DEFAULT_ARTICLES = [
 // loadArticles() — merges default articles with localStorage and Firebase
 // This is the ONLY function all pages should use to get articles.
 // ============================================================
+
 let FIREBASE_ARTICLES = [];
 
 async function loadFirebaseArticlesIfAvailable() {
@@ -230,17 +231,13 @@ async function loadFirebaseArticlesIfAvailable() {
 }
 
 function loadArticles() {
-  const saved = JSON.parse(localStorage.getItem('neptune_articles') || '[]');
-
-  // Build a map of default articles by id for O(1) lookup
+  // Start with defaults
   const defaultMap = {};
   DEFAULT_ARTICLES.forEach(a => { defaultMap[a.id] = a; });
-  FIREBASE_ARTICLES.forEach(a => { defaultMap[a.id] = a; });
 
-  // Saved articles can override defaults and Firebase entries (same id) or be new
-  saved.forEach(a => { defaultMap[a.id] = a; });
+  // Firebase overrides defaults (NOT localStorage)
+  FIREBASE_ARTICLES.forEach(a => { defaultMap[a.firebaseId || a.id] = a; });
 
-  // Return as array, sorted by id
   return Object.values(defaultMap).sort((a, b) => {
     const ida = typeof a.id === 'string' && !isNaN(a.id) ? Number(a.id) : a.id;
     const idb = typeof b.id === 'string' && !isNaN(b.id) ? Number(b.id) : b.id;

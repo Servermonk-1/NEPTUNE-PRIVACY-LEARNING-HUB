@@ -6,6 +6,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Neptune Privacy Learning Hub</title>
   <link rel="stylesheet" href="css/style.css">
+  <script src="https://www.gstatic.com/firebasejs/10.7.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.2/firebase-firestore-compat.js"></script>
+  <script src="js/firebase-config.js"></script>
 </head>
 
 <body>
@@ -31,7 +34,8 @@
           <li><a href="quiz.html">Quiz</a></li>
           <li><a href="roadmap.html">Roadmap</a></li>
           <li><a href="about.html">About</a></li>
-          <li style="margin-left: auto;"><a href="admin.html" class="admin-link" title="THIS IS ONLY FOR ADMINS">Admin</a></li>
+          <li style="margin-left: auto;"><a href="admin.html" class="admin-link"
+              title="THIS IS ONLY FOR ADMINS">Admin</a></li>
         </ul>
       </nav>
     </div>
@@ -209,6 +213,13 @@
   <script src="js/articles.js"></script>
   <script src="js/videos.js"></script>
   <script src="js/main.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async function () {
+      await loadFirebaseArticlesIfAvailable();
+      const count = loadArticles().length;
+      document.getElementById('articlesCount').textContent = count;
+    });
+  </script>
 </body>
 
 </html>

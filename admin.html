@@ -258,11 +258,7 @@
 
       const article = {
         id: editingId || Date.now(),
-        type,
-        title,
-        excerpt,
-        level,
-        category,
+        type, title, excerpt, level, category,
         date: new Date().toISOString().split('T')[0]
       };
 
@@ -278,26 +274,17 @@
         article.content = content;
       }
 
-      if (typeof saveArticleToFirebase === 'function') {
-        try {
-          const firebaseId = await saveArticleToFirebase(article);
-          article.firebaseId = firebaseId;
-        } catch (error) {
-          console.error(error);
-          notify('Saved locally, but Firebase upload failed. Check your config.', 'error');
-        }
+      try {
+        const firebaseId = await saveArticleToFirebase(article);
+        article.firebaseId = firebaseId;
+        notify('Article saved! It is now live on the Articles page.', 'success');
+        await loadFirebaseArticlesIfAvailable();
+        clearForm();
+        renderList();
+      } catch (error) {
+        console.error(error);
+        notify('Firebase upload failed. Check your config.', 'error');
       }
-
-      const saved = JSON.parse(localStorage.getItem('neptune_articles') || '[]');
-      const idx = saved.findIndex(a => a.id === article.id);
-      if (idx >= 0) saved[idx] = article;
-      else saved.push(article);
-      localStorage.setItem('neptune_articles', JSON.stringify(saved));
-      localStorage.setItem('neptune_articles_updated', Date.now());
-
-      notify('Article saved! It is now live on the Articles page.', 'success');
-      clearForm();
-      renderList();
     }
 
     // ── Render list ────────────────────────────────────────
@@ -340,22 +327,18 @@
     async function deleteArticle(id) {
       if (!confirm('Delete this article?')) return;
       const article = loadArticles().find(a => a.id === id);
-      if (article && article.firebaseId && typeof deleteArticleFromFirebase === 'function') {
+      if (article && article.firebaseId) {
         try {
           await deleteArticleFromFirebase(article.firebaseId);
+          notify('Article deleted.', 'info');
+          await loadFirebaseArticlesIfAvailable();
+          renderList();
         } catch (error) {
           console.error(error);
-          notify('Deleted locally, but Firebase delete failed.', 'error');
+          notify('Firebase delete failed.', 'error');
         }
       }
-
-      const saved = JSON.parse(localStorage.getItem('neptune_articles') || '[]');
-      localStorage.setItem('neptune_articles', JSON.stringify(saved.filter(a => a.id !== id)));
-      localStorage.setItem('neptune_articles_updated', Date.now());
-      renderList();
-      notify('Article deleted.', 'info');
     }
-
     // ── Clear ──────────────────────────────────────────────
     function clearForm() {
       editingId = null;
