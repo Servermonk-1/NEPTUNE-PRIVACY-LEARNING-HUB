@@ -1,8 +1,7 @@
 // ============================================================
 // NEPTUNE PRIVACY — ARTICLES DATA
-// Default articles are defined here.
-// Admin-saved articles are stored in localStorage under
-// 'neptune_articles' and are merged at runtime by loadArticles().
+// Default articles are hardcoded here.
+// Admin articles live in Firestore only.
 // ============================================================
 
 const DEFAULT_ARTICLES = [
@@ -214,10 +213,8 @@ const DEFAULT_ARTICLES = [
 ];
 
 // ============================================================
-// loadArticles() — merges default articles with localStorage and Firebase
-// This is the ONLY function all pages should use to get articles.
+// Firebase — single source of truth for admin-uploaded articles
 // ============================================================
-
 let FIREBASE_ARTICLES = [];
 
 async function loadFirebaseArticlesIfAvailable() {
@@ -230,24 +227,38 @@ async function loadFirebaseArticlesIfAvailable() {
   }
 }
 
+// ============================================================
+// loadArticles() — defaults + Firebase only, NO localStorage
+// ============================================================
 function loadArticles() {
-  // Start with defaults
-  const defaultMap = {};
-  DEFAULT_ARTICLES.forEach(a => { defaultMap[a.id] = a; });
+  const map = {};
 
-  // Firebase overrides defaults (NOT localStorage)
-  FIREBASE_ARTICLES.forEach(a => { defaultMap[a.firebaseId || a.id] = a; });
+  // 1. Start with hardcoded defaults (keyed by numeric id)
+  DEFAULT_ARTICLES.forEach(a => { map[a.id] = a; });
 
-  return Object.values(defaultMap).sort((a, b) => {
-    const ida = typeof a.id === 'string' && !isNaN(a.id) ? Number(a.id) : a.id;
-    const idb = typeof b.id === 'string' && !isNaN(b.id) ? Number(b.id) : b.id;
-    if (ida == null) return 1;
-    if (idb == null) return -1;
-    return ida > idb ? 1 : (ida < idb ? -1 : 0);
+  // 2. Firebase articles are keyed by their firebaseId (string)
+  //    They never overwrite defaults unless they share the same id,
+  //    which won't happen since Firebase uses auto-generated string IDs.
+  FIREBASE_ARTICLES.forEach(a => {
+    const key = a.firebaseId || a.id;
+    map[key] = a;
+  });
+
+  return Object.values(map).sort((a, b) => {
+    // Numeric ids (defaults) sort first, then Firebase string ids by date
+    const aNum = typeof a.id === 'number';
+    const bNum = typeof b.id === 'number';
+    if (aNum && bNum) return a.id - b.id;
+    if (aNum) return -1;
+    if (bNum) return 1;
+    // Both Firebase articles — sort by date descending (newest first)
+    return (b.date || '').localeCompare(a.date || '');
   });
 }
 
-// Convenience helpers used by other pages
+// ============================================================
+// Convenience filters
+// ============================================================
 function filterArticles(level) {
   return loadArticles().filter(a => a.level === level);
 }
@@ -257,12 +268,8 @@ function filterArticlesByCategory(category) {
 }
 
 function filterArticlesByContentType(contentType) {
-  if (contentType === 'short') {
-    return loadArticles().filter(a => a.type !== 'twitter');
-  }
-  if (contentType === 'long') {
-    return loadArticles().filter(a => a.type === 'twitter');
-  }
+  if (contentType === 'short') return loadArticles().filter(a => a.type === 'article');
+  if (contentType === 'long') return loadArticles().filter(a => a.type === 'twitter' || a.type === 'medium');
   return loadArticles();
 }
 
@@ -271,23 +278,38 @@ function filterArticlesByContentType(contentType) {
 // ============================================================
 function createArticleCard(article) {
   const levelClass = (article.level || '').toLowerCase();
-  const contentLabel = article.type === 'twitter' ? 'Long Content' : 'Short Content';
-  const contentBadge = `<span class="badge badge-content ${article.type === 'twitter' ? 'badge-long' : 'badge-short'}">${contentLabel}</span>`;
 
-  if (article.type === 'twitter') {
+  const contentLabel = article.type === 'twitter' ? 'Deep Dive'
+    : article.type === 'medium' ? 'Medium Read'
+      : 'Quick Guide';
+
+  const badgeClass = article.type === 'twitter' ? 'badge-long'
+    : article.type === 'medium' ? 'badge-medium'
+      : 'badge-short';
+
+  const contentBadge = `<span class="badge badge-content ${badgeClass}">${contentLabel}</span>`;
+
+  // External link card (Twitter or Medium)
+  if (article.type === 'twitter' || article.type === 'medium') {
+    const icon = article.type === 'medium' ? 'M' : '𝕏';
+    const iconClass = article.type === 'medium' ? 'card-icon-medium' : 'card-icon-twitter';
+    const platformLabel = article.type === 'medium' ? 'Medium' : 'Twitter/X';
+
     return `
       <a href="${article.url}" target="_blank" rel="noopener" class="card article-card" style="text-decoration:none;color:inherit;">
         <div class="card-top-bar bar-${levelClass}"></div>
-        <div class="card-icon-twitter">𝕏</div>
+        <div class="${iconClass}">${icon}</div>
         <h3>${article.title}</h3>
         <p>${article.excerpt}</p>
         <div class="card-meta">
           <span class="badge badge-level level-${levelClass}">${article.level}</span>
           ${contentBadge}
-          <span class="badge badge-category">Twitter/X</span>
+          <span class="badge badge-category">${platformLabel}</span>
         </div>
       </a>`;
   }
+
+  // Normal article card
   return `
     <a href="article.html?id=${article.id}" class="card article-card" style="text-decoration:none;color:inherit;">
       <div class="card-top-bar bar-${levelClass}"></div>
@@ -306,7 +328,7 @@ function displayArticle(article) {
   const main = document.getElementById('articleContent');
   if (!main) return;
 
-  const contentLabel = article.type === 'twitter' ? 'Long Content' : 'Short Content';
+  const contentLabel = article.type === 'twitter' ? 'Deep Dive' : 'Quick Guide';
   const contentBadge = `<span class="badge badge-content ${article.type === 'twitter' ? 'badge-long' : 'badge-short'}">${contentLabel}</span>`;
 
   if (article.type === 'twitter') {
@@ -315,7 +337,7 @@ function displayArticle(article) {
         <a href="articles.html" class="back-link">← Back to Articles</a>
         <h1>${article.title}</h1>
         <div class="article-badges">
-          <span class="badge badge-level level-${(article.level||'').toLowerCase()}">${article.level}</span>
+          <span class="badge badge-level level-${(article.level || '').toLowerCase()}">${article.level}</span>
           ${contentBadge}
           <span class="badge badge-category">Twitter/X</span>
         </div>
@@ -329,7 +351,7 @@ function displayArticle(article) {
     <div class="article-detail">
       <a href="articles.html" class="back-link">← Back to Articles</a>
       <div class="article-badges">
-        <span class="badge badge-level level-${(article.level||'').toLowerCase()}">${article.level}</span>
+        <span class="badge badge-level level-${(article.level || '').toLowerCase()}">${article.level}</span>
         ${contentBadge}
         ${article.category ? `<span class="badge badge-category">${article.category}</span>` : ''}
         <span class="card-date">${article.date || ''}</span>
@@ -344,22 +366,22 @@ function updateArticlesDisplay() {
   if (!grid) return;
 
   const search = (document.getElementById('searchInput')?.value || '').toLowerCase();
-  const level  = document.getElementById('levelFilter')?.value || 'all';
+  const level = document.getElementById('levelFilter')?.value || 'all';
   const contentType = document.getElementById('contentFilter')?.value || 'all';
 
   let articles = loadArticles();
   if (level !== 'all') articles = articles.filter(a => a.level === level);
   if (contentType !== 'all') {
-    articles = articles.filter(a => contentType === 'long' ? a.type === 'twitter' : a.type !== 'twitter');
+    articles = articles.filter(a => contentType === 'long'
+      ? (a.type === 'twitter' || a.type === 'medium')
+      : a.type === 'article');
   }
   if (search) articles = articles.filter(a =>
     a.title.toLowerCase().includes(search) ||
     a.excerpt.toLowerCase().includes(search)
   );
 
-  if (articles.length === 0) {
-    grid.innerHTML = '<p style="color:#666;grid-column:1/-1;">No articles found.</p>';
-    return;
-  }
-  grid.innerHTML = articles.map(createArticleCard).join('');
+  grid.innerHTML = articles.length
+    ? articles.map(createArticleCard).join('')
+    : '<p style="color:#666;grid-column:1/-1;">No articles found.</p>';
 }

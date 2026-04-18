@@ -76,6 +76,7 @@
               <select id="articleType" required onchange="toggleFields()">
                 <option value="article">Normal Article</option>
                 <option value="twitter">Twitter / X Link</option>
+                <option value="medium">Medium Article</option>
               </select>
             </div>
             <div class="form-group" style="display:none;">
@@ -117,9 +118,11 @@
             <div id="twitterFields" style="display:none;">
               <div class="form-group">
                 <label>Twitter / X URL *</label>
-                <input type="text" id="articleUrl" placeholder="https://twitter.com/username/status/…">
-                <small style="color:var(--text-subtle);font-size:0.82rem;margin-top:4px;display:block;">Paste the full
-                  Twitter/X post URL</small>
+                <input type="text" id="articleUrl" id="articleUrl" placeholder="Paste your URL here…">
+                <small id="urlHint"
+                  style="color:var(--text-subtle);font-size:0.82rem;margin-top:4px;display:block;">Paste the full URL
+                  here</small>
+
               </div>
             </div>
 
@@ -176,21 +179,15 @@
   <script src="js/articles.js"></script>
   <script>
     const ADMIN_PASSWORD = 'Neptune2026';
-    let editingId = null;
-
-    async function loadFirebaseAdminArticles() {
-      if (typeof loadFirebaseArticlesIfAvailable === 'function') {
-        await loadFirebaseArticlesIfAvailable();
-      }
-      renderList();
-    }
+    let editingFirebaseId = null; // tracks which Firebase doc we're editing
 
     async function init() {
       if (!sessionStorage.getItem('adminAuth')) return;
       document.getElementById('mainContent').classList.add('authenticated');
       document.getElementById('articleForm').addEventListener('submit', handleSubmit);
       toggleFields();
-      await loadFirebaseAdminArticles();
+      await loadFirebaseArticlesIfAvailable();
+      renderList();
       renderFeedback();
     }
 
@@ -223,10 +220,24 @@
     // ── Field visibility ───────────────────────────────────
     function toggleFields() {
       const type = document.getElementById('articleType').value;
-      document.getElementById('twitterFields').style.display = type === 'twitter' ? 'block' : 'none';
+      const isExternal = type === 'twitter' || type === 'medium';
+      document.getElementById('twitterFields').style.display = isExternal ? 'block' : 'none';
       document.getElementById('articleFields').style.display = type === 'article' ? 'block' : 'none';
       document.getElementById('articleContent').required = type === 'article';
-      document.getElementById('articleUrl').required = type === 'twitter';
+      document.getElementById('articleUrl').required = isExternal;
+
+      // Update the URL label based on type
+      const urlLabel = document.querySelector('#twitterFields label');
+      if (urlLabel) {
+        if (type === 'medium') urlLabel.textContent = 'Medium Article URL *';
+        else urlLabel.textContent = 'Twitter / X URL *';
+      }
+
+      const urlHint = document.getElementById('urlHint');
+      if (urlHint) {
+        if (type === 'medium') urlHint.textContent = 'Paste the full Medium article URL (medium.com/…)';
+        else if (type === 'twitter') urlHint.textContent = 'Paste the full Twitter/X post URL';
+      }
     }
 
     // ── Format helpers ─────────────────────────────────────
@@ -235,8 +246,9 @@
       const s = ta.selectionStart, e = ta.selectionEnd;
       const sel = ta.value.slice(s, e);
       const tags = {
-        bold: ['<strong>', '</strong>'], italic: ['<em>', '</em>'], underline: ['<u>', '</u>'],
-        h2: ['<h2>', '</h2>'], h3: ['<h3>', '</h3>'], li: ['<li>', '</li>']
+        bold: ['<strong>', '</strong>'], italic: ['<em>', '</em>'],
+        underline: ['<u>', '</u>'], h2: ['<h2>', '</h2>'],
+        h3: ['<h3>', '</h3>'], li: ['<li>', '</li>']
       };
       const [o, c] = tags[cmd] || ['', ''];
       const rep = o + sel + c;
@@ -254,13 +266,17 @@
       const level = document.getElementById('articleLevel').value;
       const category = document.getElementById('articleCategory').value;
 
-      if (!type || !title || !excerpt || !level) { notify('Fill in all required fields.', 'error'); return; }
+      if (!type || !title || !excerpt || !level) {
+        notify('Fill in all required fields.', 'error'); return;
+      }
 
       const article = {
-        id: editingId || Date.now(),
+        id: editingFirebaseId ? (loadArticles().find(a => a.firebaseId === editingFirebaseId)?.id || Date.now()) : Date.now(),
         type, title, excerpt, level, category,
         date: new Date().toISOString().split('T')[0]
       };
+
+      if (editingFirebaseId) article.firebaseId = editingFirebaseId;
 
       if (type === 'twitter') {
         const url = document.getElementById('articleUrl').value.trim();
@@ -268,15 +284,16 @@
           notify('Please provide a valid Twitter/X URL.', 'error'); return;
         }
         article.url = url;
-      } else {
-        const content = document.getElementById('articleContent').value.trim();
-        if (!content) { notify('Please write article content.', 'error'); return; }
-        article.content = content;
+      } else if (type === 'medium') {
+        const url = document.getElementById('articleUrl').value.trim();
+        if (!url || !url.includes('medium.com')) {
+          notify('Please provide a valid Medium URL.', 'error'); return;
+        }
+        article.url = url;
       }
 
       try {
-        const firebaseId = await saveArticleToFirebase(article);
-        article.firebaseId = firebaseId;
+        await saveArticleToFirebase(article);
         notify('Article saved! It is now live on the Articles page.', 'success');
         await loadFirebaseArticlesIfAvailable();
         clearForm();
@@ -289,30 +306,33 @@
 
     // ── Render list ────────────────────────────────────────
     function renderList() {
-      const all = loadArticles();
+      // Only show Firebase articles in admin (not defaults)
+      const firebaseOnly = FIREBASE_ARTICLES;
       const container = document.getElementById('articlesList');
-      if (!all.length) { container.innerHTML = '<p class="text-muted">No articles yet. Add one above.</p>'; return; }
-      container.innerHTML = all.map(a => `
-        <div class="article-item">
-          <div class="article-info">
-            <h3>${a.title}</h3>
-            <p>${a.excerpt}</p>
-            <small>Level: ${a.level} &nbsp;|&nbsp; Type: ${a.type === 'twitter' ? 'Twitter/X' : 'Article'} ${a.category ? '&nbsp;|&nbsp; ' + a.category : ''}</small>
-          </div>
-          <div class="article-actions">
-            <button class="action-button edit-button"   onclick="editArticle(${a.id})">Edit</button>
-            <button class="action-button delete-button" onclick="deleteArticle(${a.id})">Delete</button>
-          </div>
-        </div>`).join('');
+      if (!firebaseOnly.length) {
+        container.innerHTML = '<p class="text-muted">No uploaded articles yet. Add one above.</p>';
+        return;
+      }
+      container.innerHTML = firebaseOnly.map(a => `
+    <div class="article-item">
+      <div class="article-info">
+        <h3>${a.title}</h3>
+        <p>${a.excerpt}</p>
+        <small>Level: ${a.level} &nbsp;|&nbsp; Type: ${a.type === 'twitter' ? 'Twitter/X' : 'Article'}${a.category ? ' &nbsp;|&nbsp; ' + a.category : ''}</small>
+      </div>
+      <div class="article-actions">
+        <button class="action-button edit-button"   onclick="editArticle('${a.firebaseId}')">Edit</button>
+        <button class="action-button delete-button" onclick="deleteArticle('${a.firebaseId}')">Delete</button>
+      </div>
+    </div>`).join('');
     }
 
     // ── Edit ───────────────────────────────────────────────
-    function editArticle(id) {
-      const article = loadArticles().find(a => a.id === id);
+    function editArticle(firebaseId) {
+      const article = FIREBASE_ARTICLES.find(a => a.firebaseId === firebaseId);
       if (!article) return;
-      editingId = id;
+      editingFirebaseId = firebaseId;
       document.getElementById('articleType').value = article.type || 'article';
-      document.getElementById('articleId').value = id;
       document.getElementById('articleTitle').value = article.title;
       document.getElementById('articleExcerpt').value = article.excerpt;
       document.getElementById('articleLevel').value = article.level;
@@ -324,48 +344,45 @@
     }
 
     // ── Delete ─────────────────────────────────────────────
-    async function deleteArticle(id) {
+    async function deleteArticle(firebaseId) {
       if (!confirm('Delete this article?')) return;
-      const article = loadArticles().find(a => a.id === id);
-      if (article && article.firebaseId) {
-        try {
-          await deleteArticleFromFirebase(article.firebaseId);
-          notify('Article deleted.', 'info');
-          await loadFirebaseArticlesIfAvailable();
-          renderList();
-        } catch (error) {
-          console.error(error);
-          notify('Firebase delete failed.', 'error');
-        }
+      try {
+        await deleteArticleFromFirebase(firebaseId);
+        notify('Article deleted.', 'info');
+        await loadFirebaseArticlesIfAvailable();
+        renderList();
+      } catch (error) {
+        console.error(error);
+        notify('Firebase delete failed.', 'error');
       }
     }
+
     // ── Clear ──────────────────────────────────────────────
     function clearForm() {
-      editingId = null;
+      editingFirebaseId = null;
       document.getElementById('articleForm').reset();
-      document.getElementById('articleId').value = '';
       document.getElementById('articleType').value = 'article';
       toggleFields();
     }
 
-    // ── Feedback ───────────────────────────────────────────
+    // ── Feedback (still localStorage — no Firebase collection for it) ──
     function renderFeedback() {
       const container = document.getElementById('feedbackContainer');
       const all = JSON.parse(localStorage.getItem('neptune_feedback') || '[]');
       if (!all.length) { container.innerHTML = '<p class="no-feedback">No feedback yet.</p>'; return; }
       container.innerHTML = all.sort((a, b) => b.id - a.id).map(f => `
-        <div class="feedback-item">
-          <div class="feedback-item-header">
-            <div>
-              <span class="feedback-type-badge">${f.type}</span>
-              <span class="feedback-time">${f.timestamp}</span>
-              <div class="feedback-item-name">${f.name}</div>
-              ${f.email !== 'Not provided' ? `<a href="mailto:${f.email}" class="feedback-item-email">${f.email}</a>` : ''}
-            </div>
-            <button class="feedback-delete-btn" onclick="deleteFeedback(${f.id})">Delete</button>
-          </div>
-          <div class="feedback-item-message">${f.message}</div>
-        </div>`).join('');
+    <div class="feedback-item">
+      <div class="feedback-item-header">
+        <div>
+          <span class="feedback-type-badge">${f.type}</span>
+          <span class="feedback-time">${f.timestamp}</span>
+          <div class="feedback-item-name">${f.name}</div>
+          ${f.email !== 'Not provided' ? `<a href="mailto:${f.email}" class="feedback-item-email">${f.email}</a>` : ''}
+        </div>
+        <button class="feedback-delete-btn" onclick="deleteFeedback(${f.id})">Delete</button>
+      </div>
+      <div class="feedback-item-message">${f.message}</div>
+    </div>`).join('');
     }
 
     function deleteFeedback(id) {

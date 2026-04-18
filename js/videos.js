@@ -12,13 +12,27 @@ const videos = [
     level: 'Beginner',
     category: 'Tutorial',
     date: '2026-04-15'
+  },
+  {
+    id: 2,
+    title: 'Why Neptune privacy?',
+    description: 'Discover the unique features and benefits of Neptune Privacy',
+    type: 'twitter',
+    tweetUrl: "https://x.com/D_cryptographer/status/2014035354525798901?s=20",
+    level: 'Beginner',
+    category: 'Tutorial',
+    date: '2026-04-18'
   }
 ];
+
+
 
 function filterVideos(level) {
   if (level === 'all') return videos;
   return videos.filter(v => v.level === level);
 }
+
+"https://x.com/D_cryptographer/status/2014035354525798901?s=20"
 
 function createVideoCard(video) {
   let embedHtml = '';

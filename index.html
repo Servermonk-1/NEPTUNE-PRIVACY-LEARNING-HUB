@@ -101,32 +101,13 @@
         </div>
       </div>
     </section>
-
     <!-- Featured Articles -->
     <section class="featured-content">
       <h2>Featured Articles</h2>
-      <div class="grid">
-        <a href="article.html?id=1" class="card card-link">
-          <div class="card-top-bar bar-beginner"></div>
-          <h3>What is Neptune Privacy?</h3>
-          <p>Learn the fundamentals — the quantum-safe blockchain built for privacy by default.</p>
-          <div class="card-meta"><span class="badge badge-level level-beginner">Beginner</span></div>
-        </a>
-        <a href="article.html?id=3" class="card card-link">
-          <div class="card-top-bar bar-intermediate"></div>
-          <h3>The Quantum Computing Threat</h3>
-          <p>Why quantum resistance matters and how Neptune protects you against future attacks.</p>
-          <div class="card-meta"><span class="badge badge-level level-intermediate">Intermediate</span></div>
-        </a>
-        <a href="article.html?id=5" class="card card-link">
-          <div class="card-top-bar bar-beginner"></div>
-          <h3>Private Smart Contracts</h3>
-          <p>Explore what becomes possible when smart contracts execute privately via Triton VM.</p>
-          <div class="card-meta"><span class="badge badge-level level-beginner">Beginner</span></div>
-        </a>
+      <div class="grid" id="featuredArticlesGrid">
+        <p class="text-muted">Loading articles…</p>
       </div>
     </section>
-
     <!-- Key Features -->
     <section class="featured-content">
       <h2>Key Features</h2>
@@ -209,15 +190,33 @@
     <p>Your comprehensive guide to mastering Neptune Privacy</p>
     <p style="margin-top:8px;font-size:0.8rem;opacity:0.6;">Built with ❤️ by the Neptune Privacy community</p>
   </footer>
-
   <script src="js/articles.js"></script>
   <script src="js/videos.js"></script>
   <script src="js/main.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', async function () {
       await loadFirebaseArticlesIfAvailable();
+
+      // Update article count
       const count = loadArticles().length;
       document.getElementById('articlesCount').textContent = count;
+
+      // Featured articles — show 3: mix of Firebase uploads + defaults
+      const all = loadArticles();
+      const firebase = all.filter(a => a.firebaseId); // uploaded ones
+      const defaults = all.filter(a => !a.firebaseId); // built-in ones
+
+      // Take up to 2 from Firebase (newest), 1 from defaults, total 3
+      const featured = [
+        ...firebase.slice(0, 2),
+        ...defaults.slice(0, 1)
+      ].slice(0, 3);
+
+      // If no Firebase articles yet, just show 3 defaults
+      const toShow = featured.length >= 1 ? featured : defaults.slice(0, 3);
+
+      document.getElementById('featuredArticlesGrid').innerHTML =
+        toShow.map(createArticleCard).join('');
     });
   </script>
 </body>
