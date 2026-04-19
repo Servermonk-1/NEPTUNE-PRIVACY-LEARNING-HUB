@@ -1,11 +1,379 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Videos - Neptune Privacy</title>
   <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* ── Video page hero ────────────────────────────────── */
+    .videos-hero {
+      text-align: center;
+      padding: 48px 0 40px;
+      position: relative;
+    }
+
+    .videos-hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 200px;
+      background: radial-gradient(ellipse, rgba(0, 196, 255, 0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .videos-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.7rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: #00c4ff;
+      margin-bottom: 18px;
+      padding: 5px 14px;
+      border: 1px solid rgba(0, 196, 255, 0.2);
+      border-radius: 99px;
+      background: rgba(0, 196, 255, 0.05);
+    }
+
+    .videos-eyebrow::before {
+      content: '';
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #00c4ff;
+      animation: blink 2s ease infinite;
+    }
+
+    @keyframes blink {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.2;
+      }
+    }
+
+    .videos-hero h1 {
+      font-size: clamp(2rem, 5vw, 3rem);
+      margin-bottom: 14px;
+      letter-spacing: -0.03em;
+    }
+
+    .videos-hero h1 span {
+      background: linear-gradient(90deg, #00c4ff, #00e5c3);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .videos-hero p {
+      max-width: 480px;
+      margin: 0 auto 32px;
+      font-size: 1rem;
+      color: rgba(180, 210, 240, 0.55);
+      line-height: 1.7;
+    }
+
+    /* Stats row */
+    .videos-stats {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 32px;
+      flex-wrap: wrap;
+      margin-bottom: 48px;
+    }
+
+    .vstat {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 20px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(0, 196, 255, 0.1);
+      border-radius: 99px;
+      font-size: 0.82rem;
+      color: rgba(180, 210, 240, 0.6);
+    }
+
+    .vstat strong {
+      color: #00c4ff;
+      font-weight: 700;
+    }
+
+    /* ── Filters ────────────────────────────────────────── */
+    .videos-filters {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 36px;
+      padding: 16px 20px;
+      background: rgba(15, 23, 41, 0.8);
+      border: 1px solid rgba(0, 196, 255, 0.1);
+      border-radius: 14px;
+      backdrop-filter: blur(12px);
+    }
+
+    .videos-filters label {
+      font-size: 0.78rem;
+      color: rgba(180, 200, 230, 0.45);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      white-space: nowrap;
+    }
+
+    .videos-filters select {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(0, 196, 255, 0.12);
+      border-radius: 8px;
+      color: #e8f4ff;
+      padding: 8px 14px;
+      font-size: 0.88rem;
+      outline: none;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+
+    .videos-filters select:focus {
+      border-color: rgba(0, 196, 255, 0.4);
+    }
+
+    .filter-sep {
+      width: 1px;
+      height: 24px;
+      background: rgba(0, 196, 255, 0.1);
+    }
+
+    /* ── Video Grid ─────────────────────────────────────── */
+    .videos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 24px;
+    }
+
+    /* ── Video Card ─────────────────────────────────────── */
+    .video-card {
+      background: rgba(15, 23, 41, 0.9);
+      border: 1px solid rgba(0, 196, 255, 0.1);
+      border-radius: 20px;
+      overflow: hidden;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: default;
+      padding: 0 !important;
+    }
+
+    .video-card:hover {
+      border-color: rgba(0, 196, 255, 0.28);
+      transform: translateY(-6px);
+      box-shadow:
+        0 24px 56px rgba(0, 0, 0, 0.5),
+        0 0 0 1px rgba(0, 196, 255, 0.15),
+        0 0 30px rgba(0, 196, 255, 0.06);
+    }
+
+    /* YouTube embed wrapper — 16:9 */
+    .video-frame-wrap {
+      position: relative;
+      width: 100%;
+      padding-top: 56.25%;
+      background: #000;
+      overflow: hidden;
+    }
+
+    .video-frame-wrap iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    /* Twitter/X card */
+    .twitter-video-card {
+      position: relative;
+      width: 100%;
+      padding-top: 56.25%;
+      cursor: pointer;
+      overflow: hidden;
+    }
+
+    .twitter-video-bg {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, #0a0f1e 0%, #0d1a2e 50%, #071422 100%);
+    }
+
+    .twitter-video-bg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% 50%, rgba(0, 196, 255, 0.07) 0%, transparent 65%);
+    }
+
+    .twitter-video-content {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: transform 0.25s ease;
+    }
+
+    .twitter-video-card:hover .twitter-video-content {
+      transform: scale(1.04);
+    }
+
+    .twitter-x-icon {
+      font-size: 1.6rem;
+      color: rgba(255, 255, 255, 0.2);
+      font-weight: 900;
+      margin-bottom: 4px;
+    }
+
+    .twitter-play-btn {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: rgba(0, 196, 255, 0.15);
+      border: 2px solid rgba(0, 196, 255, 0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #00c4ff;
+      transition: all 0.25s ease;
+      margin-bottom: 12px;
+    }
+
+    .twitter-video-card:hover .twitter-play-btn {
+      background: rgba(0, 196, 255, 0.25);
+      border-color: #00c4ff;
+      box-shadow: 0 0 20px rgba(0, 196, 255, 0.3);
+    }
+
+    .twitter-video-label {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: rgba(255, 255, 255, 0.75);
+      margin: 0;
+    }
+
+    .twitter-video-hint {
+      font-size: 0.72rem;
+      color: rgba(255, 255, 255, 0.3);
+      margin: 0;
+      letter-spacing: 0.04em;
+    }
+
+    /* Card body */
+    .video-card-body {
+      padding: 22px 24px 24px;
+    }
+
+    .video-card-body h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #e8f4ff;
+      margin-bottom: 8px;
+      line-height: 1.4;
+    }
+
+    .video-card-body p {
+      font-size: 0.85rem;
+      color: rgba(160, 200, 230, 0.5);
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+
+    /* Platform badges */
+    .badge-youtube {
+      background: rgba(255, 0, 0, 0.1);
+      color: #ff4444;
+      border: 1px solid rgba(255, 0, 0, 0.2);
+      border-radius: 99px;
+      padding: 4px 10px;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+
+    .badge-twitter {
+      background: rgba(0, 196, 255, 0.08);
+      color: #00c4ff;
+      border: 1px solid rgba(0, 196, 255, 0.18);
+      border-radius: 99px;
+      padding: 4px 10px;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+
+    /* ── Section divider ────────────────────────────────── */
+    .section-label {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin: 40px 0 20px;
+    }
+
+    .section-label span {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(180, 200, 230, 0.4);
+      white-space: nowrap;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(0, 196, 255, 0.08);
+    }
+
+    /* ── Responsive ─────────────────────────────────────── */
+    @media (max-width: 768px) {
+      .videos-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .videos-filters {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+
+      .filter-sep {
+        display: none;
+      }
+
+      .videos-filters select {
+        width: 100%;
+      }
+
+      .videos-stats {
+        gap: 12px;
+      }
+
+      .vstat {
+        font-size: 0.78rem;
+        padding: 8px 14px;
+      }
+    }
+  </style>
 </head>
+
 <body>
   <header>
     <div class="header-container">
@@ -17,7 +385,7 @@
         <ul>
           <li><a href="index.html">Home</a></li>
           <li><a href="articles.html">Articles</a></li>
-          <li><a href="videos.html">Videos</a></li>
+          <li><a href="videos.html" class="active">Videos</a></li>
           <li><a href="features.html">Features</a></li>
           <li><a href="learn.html">Learn</a></li>
           <li><a href="quiz.html">Quiz</a></li>
@@ -29,35 +397,24 @@
   </header>
 
   <main>
-    <h1>Videos</h1>
-    <p class="text-muted mb-md">Video guides and tutorials on Neptune Privacy concepts.</p>
-
-    <div class="filters-container">
-      <div class="filter-group">
-        <label>Level:</label>
-        <select id="videoLevelFilter" onchange="updateVideosDisplay()">
-          <option value="all">All Levels</option>
-          <option value="Beginner">Beginner</option>
-          <option value="Intermediate">Intermediate</option>
-          <option value="Advanced">Advanced</option>
-        </select>
+    <!-- Hero -->
+    <div class="videos-hero">
+      <div style="display:flex;justify-content:center;">
+        <span class="videos-eyebrow">Neptune Privacy — Video Library</span>
       </div>
-      <div class="filter-group">
-        <label>Category:</label>
-        <select id="videoCategoryFilter" onchange="updateVideosDisplay()">
-          <option value="all">All Categories</option>
-          <option value="Introduction">Introduction</option>
-          <option value="Technology">Technology</option>
-          <option value="Tutorial">Tutorial</option>
-          <option value="Security">Security</option>
-          <option value="Comparison">Comparison</option>
-          <option value="Features">Features</option>
-          <option value="Economics">Economics</option>
-        </select>
+      <h1>Watch &amp; <span>Learn</span></h1>
+      <p>Video guides, community spotlights, and deep dives into Neptune Privacy's technology and vision.</p>
+
+      <div class="videos-stats">
+        <div class="vstat"><strong id="youtubeCount">0</strong> YouTube Videos</div>
+        <div class="vstat"><strong id="twitterCount">0</strong> Twitter/X Clips</div>
+        <div class="vstat"><strong id="totalCount">0</strong> Total Videos</div>
       </div>
     </div>
 
-    <div class="grid" id="videosGrid"></div>
+
+    <!-- Videos Grid -->
+    <div class="videos-grid" id="videosGrid"></div>
   </main>
 
   <footer>
@@ -72,7 +429,15 @@
   <script src="js/videos.js"></script>
   <script src="js/main.js"></script>
   <script>
-    document.addEventListener('DOMContentLoaded', updateVideosDisplay);
+    document.addEventListener('DOMContentLoaded', function () {
+      updateVideosDisplay();
+
+      // Update stats dynamically from videos array
+      document.getElementById('youtubeCount').textContent = videos.filter(v => v.type === 'youtube').length;
+      document.getElementById('twitterCount').textContent = videos.filter(v => v.type === 'twitter').length;
+      document.getElementById('totalCount').textContent = videos.length;
+    });
   </script>
 </body>
+
 </html>

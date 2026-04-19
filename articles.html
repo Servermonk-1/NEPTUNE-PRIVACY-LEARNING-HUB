@@ -47,8 +47,13 @@
     }
 
     @keyframes overlayIn {
-      from { opacity: 0; }
-      to   { opacity: 1; }
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
     }
 
     .choice-box {
@@ -59,8 +64,15 @@
     }
 
     @keyframes boxIn {
-      from { opacity: 0; transform: translateY(40px); }
-      to   { opacity: 1; transform: translateY(0); }
+      from {
+        opacity: 0;
+        transform: translateY(40px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .orb {
@@ -71,13 +83,45 @@
       pointer-events: none;
       animation: orbFloat 8s ease-in-out infinite;
     }
-    .orb-1 { width: 400px; height: 400px; top: -100px; right: -80px; background: #00c4ff; animation-delay: 0s; }
-    .orb-2 { width: 300px; height: 300px; bottom: -80px; left: -60px; background: #00e5c3; animation-delay: 3s; }
-    .orb-3 { width: 200px; height: 200px; top: 40%; left: 5%; background: #00c4ff; opacity: 0.08; animation-delay: 5s; }
+
+    .orb-1 {
+      width: 400px;
+      height: 400px;
+      top: -100px;
+      right: -80px;
+      background: #00c4ff;
+      animation-delay: 0s;
+    }
+
+    .orb-2 {
+      width: 300px;
+      height: 300px;
+      bottom: -80px;
+      left: -60px;
+      background: #00e5c3;
+      animation-delay: 3s;
+    }
+
+    .orb-3 {
+      width: 200px;
+      height: 200px;
+      top: 40%;
+      left: 5%;
+      background: #00c4ff;
+      opacity: 0.08;
+      animation-delay: 5s;
+    }
 
     @keyframes orbFloat {
-      0%, 100% { transform: scale(1) translate(0, 0); }
-      50%       { transform: scale(1.1) translate(10px, -15px); }
+
+      0%,
+      100% {
+        transform: scale(1) translate(0, 0);
+      }
+
+      50% {
+        transform: scale(1.1) translate(10px, -15px);
+      }
     }
 
     .choice-eyebrow {
@@ -93,20 +137,28 @@
       border: 1px solid rgba(0, 196, 255, 0.2);
       border-radius: 99px;
       background: rgba(0, 196, 255, 0.06);
-      animation: boxIn 0.7s cubic-bezier(0.16,1,0.3,1) 0.25s both;
+      animation: boxIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.25s both;
     }
 
     .choice-eyebrow::before {
       content: '';
-      width: 6px; height: 6px;
+      width: 6px;
+      height: 6px;
       border-radius: 50%;
       background: #00c4ff;
       animation: blink 2s ease infinite;
     }
 
     @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50%       { opacity: 0.3; }
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.3;
+      }
     }
 
     .choice-title {
@@ -117,7 +169,7 @@
       line-height: 1.15;
       margin-bottom: 16px;
       letter-spacing: -0.03em;
-      animation: boxIn 0.7s cubic-bezier(0.16,1,0.3,1) 0.3s both;
+      animation: boxIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
     }
 
     .choice-title .accent {
@@ -135,7 +187,7 @@
       margin-left: auto;
       margin-right: auto;
       line-height: 1.7;
-      animation: boxIn 0.7s cubic-bezier(0.16,1,0.3,1) 0.35s both;
+      animation: boxIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.35s both;
     }
 
     .choice-cards {
@@ -143,11 +195,72 @@
       grid-template-columns: 1fr 1fr;
       gap: 18px;
       margin-bottom: 36px;
-      animation: boxIn 0.7s cubic-bezier(0.16,1,0.3,1) 0.4s both;
+      animation: boxIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.4s both;
     }
 
-    @media (max-width: 560px) {
-      .choice-cards { grid-template-columns: 1fr; }
+    @media (max-width: 640px) {
+      .choice-cards {
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+
+      .choice-card {
+        padding: 24px 20px;
+      }
+
+      .card-icon-wrap {
+        width: 44px;
+        height: 44px;
+        font-size: 1.2rem;
+        margin-bottom: 14px;
+      }
+
+      .choice-card-title {
+        font-size: 1rem;
+      }
+
+      .choice-card-desc {
+        font-size: 0.82rem;
+        margin-bottom: 16px;
+      }
+
+      .choice-title {
+        font-size: clamp(1.6rem, 7vw, 2.2rem);
+        margin-bottom: 12px;
+      }
+
+      .choice-subtitle {
+        font-size: 0.9rem;
+        margin-bottom: 32px;
+      }
+
+      .choice-box {
+        padding: 0 4px;
+      }
+
+      .choice-eyebrow {
+        font-size: 0.62rem;
+        padding: 5px 12px;
+      }
+
+      .choice-skip {
+        font-size: 0.78rem;
+        padding: 9px 18px;
+      }
+
+      .orb-1 {
+        width: 250px;
+        height: 250px;
+      }
+
+      .orb-2 {
+        width: 180px;
+        height: 180px;
+      }
+
+      .orb-3 {
+        display: none;
+      }
     }
 
     .choice-card {
@@ -166,46 +279,66 @@
     .choice-card::after {
       content: '';
       position: absolute;
-      top: -50%; left: -50%;
-      width: 200%; height: 200%;
-      background: radial-gradient(circle at center, rgba(255,255,255,0.04) 0%, transparent 60%);
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle at center, rgba(255, 255, 255, 0.04) 0%, transparent 60%);
       opacity: 0;
       transition: opacity 0.3s ease;
       pointer-events: none;
     }
-    .choice-card:hover::after { opacity: 1; }
 
-    .choice-card.short { border-color: rgba(0, 229, 195, 0.12); }
+    .choice-card:hover::after {
+      opacity: 1;
+    }
+
+    .choice-card.short {
+      border-color: rgba(0, 229, 195, 0.12);
+    }
 
     .choice-card:hover {
       transform: translateY(-6px) scale(1.01);
       box-shadow:
-        0 30px 60px rgba(0,0,0,0.5),
-        0 0 0 1px rgba(0,196,255,0.25),
-        0 0 40px rgba(0,196,255,0.08);
+        0 30px 60px rgba(0, 0, 0, 0.5),
+        0 0 0 1px rgba(0, 196, 255, 0.25),
+        0 0 40px rgba(0, 196, 255, 0.08);
     }
+
     .choice-card.short:hover {
       box-shadow:
-        0 30px 60px rgba(0,0,0,0.5),
-        0 0 0 1px rgba(0,229,195,0.25),
-        0 0 40px rgba(0,229,195,0.08);
+        0 30px 60px rgba(0, 0, 0, 0.5),
+        0 0 0 1px rgba(0, 229, 195, 0.25),
+        0 0 40px rgba(0, 229, 195, 0.08);
     }
 
     .choice-card::before {
       content: '';
       position: absolute;
-      top: 0; left: 0; right: 0;
+      top: 0;
+      left: 0;
+      right: 0;
       height: 2px;
       border-radius: 20px 20px 0 0;
       opacity: 0;
       transition: opacity 0.3s ease;
     }
-    .choice-card.deep::before  { background: linear-gradient(90deg, #00c4ff, transparent); }
-    .choice-card.short::before { background: linear-gradient(90deg, #00e5c3, transparent); }
-    .choice-card:hover::before { opacity: 1; }
+
+    .choice-card.deep::before {
+      background: linear-gradient(90deg, #00c4ff, transparent);
+    }
+
+    .choice-card.short::before {
+      background: linear-gradient(90deg, #00e5c3, transparent);
+    }
+
+    .choice-card:hover::before {
+      opacity: 1;
+    }
 
     .card-icon-wrap {
-      width: 52px; height: 52px;
+      width: 52px;
+      height: 52px;
       border-radius: 14px;
       display: flex;
       align-items: center;
@@ -214,9 +347,20 @@
       margin-bottom: 20px;
       transition: transform 0.3s ease;
     }
-    .choice-card.deep  .card-icon-wrap { background: rgba(0,196,255,0.1); border: 1px solid rgba(0,196,255,0.15); }
-    .choice-card.short .card-icon-wrap { background: rgba(0,229,195,0.1); border: 1px solid rgba(0,229,195,0.15); }
-    .choice-card:hover .card-icon-wrap { transform: scale(1.1) rotate(-4deg); }
+
+    .choice-card.deep .card-icon-wrap {
+      background: rgba(0, 196, 255, 0.1);
+      border: 1px solid rgba(0, 196, 255, 0.15);
+    }
+
+    .choice-card.short .card-icon-wrap {
+      background: rgba(0, 229, 195, 0.1);
+      border: 1px solid rgba(0, 229, 195, 0.15);
+    }
+
+    .choice-card:hover .card-icon-wrap {
+      transform: scale(1.1) rotate(-4deg);
+    }
 
     .choice-card-title {
       font-family: 'Montserrat', sans-serif;
@@ -251,8 +395,18 @@
       padding: 5px 12px;
       border-radius: 99px;
     }
-    .choice-card.deep  .choice-card-tag { background: rgba(0,196,255,0.1); color: #00c4ff; border: 1px solid rgba(0,196,255,0.18); }
-    .choice-card.short .choice-card-tag { background: rgba(0,229,195,0.1); color: #00e5c3; border: 1px solid rgba(0,229,195,0.18); }
+
+    .choice-card.deep .choice-card-tag {
+      background: rgba(0, 196, 255, 0.1);
+      color: #00c4ff;
+      border: 1px solid rgba(0, 196, 255, 0.18);
+    }
+
+    .choice-card.short .choice-card-tag {
+      background: rgba(0, 229, 195, 0.1);
+      color: #00e5c3;
+      border: 1px solid rgba(0, 229, 195, 0.18);
+    }
 
     .choice-card-arrow {
       font-size: 1.1rem;
@@ -260,27 +414,39 @@
       transform: translateX(-6px);
       transition: all 0.25s ease;
     }
-    .choice-card.deep  .choice-card-arrow { color: #00c4ff; }
-    .choice-card.short .choice-card-arrow { color: #00e5c3; }
-    .choice-card:hover .choice-card-arrow { opacity: 1; transform: translateX(0); }
+
+    .choice-card.deep .choice-card-arrow {
+      color: #00c4ff;
+    }
+
+    .choice-card.short .choice-card-arrow {
+      color: #00e5c3;
+    }
+
+    .choice-card:hover .choice-card-arrow {
+      opacity: 1;
+      transform: translateX(0);
+    }
 
     .choice-divider {
       display: flex;
       align-items: center;
       gap: 16px;
       margin-bottom: 24px;
-      animation: boxIn 0.7s cubic-bezier(0.16,1,0.3,1) 0.45s both;
+      animation: boxIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.45s both;
     }
+
     .choice-divider::before,
     .choice-divider::after {
       content: '';
       flex: 1;
       height: 1px;
-      background: rgba(0,196,255,0.1);
+      background: rgba(0, 196, 255, 0.1);
     }
+
     .choice-divider span {
       font-size: 0.72rem;
-      color: rgba(180,200,220,0.3);
+      color: rgba(180, 200, 220, 0.3);
       letter-spacing: 0.12em;
       text-transform: uppercase;
     }
@@ -290,55 +456,69 @@
       align-items: center;
       gap: 8px;
       font-size: 0.82rem;
-      color: rgba(180,200,220,0.35);
+      color: rgba(180, 200, 220, 0.35);
       cursor: pointer;
       transition: all 0.2s;
       background: none;
-      border: 1px solid rgba(255,255,255,0.06);
+      border: 1px solid rgba(255, 255, 255, 0.06);
       padding: 10px 22px;
       border-radius: 99px;
       letter-spacing: 0.04em;
-      animation: boxIn 0.7s cubic-bezier(0.16,1,0.3,1) 0.5s both;
+      animation: boxIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.5s both;
     }
+
     .choice-skip:hover {
-      color: rgba(180,200,220,0.7);
-      border-color: rgba(255,255,255,0.12);
-      background: rgba(255,255,255,0.03);
+      color: rgba(180, 200, 220, 0.7);
+      border-color: rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.03);
     }
 
     #choiceOverlay.hiding {
-      animation: overlayOut 0.45s cubic-bezier(0.4,0,1,1) forwards;
-    }
-    @keyframes overlayOut {
-      to { opacity: 0; transform: scale(0.97); pointer-events: none; }
+      animation: overlayOut 0.45s cubic-bezier(0.4, 0, 1, 1) forwards;
     }
 
-    #mainArticles { display: none; }
+    @keyframes overlayOut {
+      to {
+        opacity: 0;
+        transform: scale(0.97);
+        pointer-events: none;
+      }
+    }
+
+    #mainArticles {
+      display: none;
+    }
 
     .active-filter-banner {
       display: flex;
       align-items: center;
       gap: 12px;
-      background: rgba(0,196,255,0.05);
-      border: 1px solid rgba(0,196,255,0.12);
+      background: rgba(0, 196, 255, 0.05);
+      border: 1px solid rgba(0, 196, 255, 0.12);
       border-radius: 12px;
       padding: 12px 18px;
       margin-bottom: 24px;
       font-size: 0.85rem;
-      color: rgba(180,220,240,0.65);
+      color: rgba(180, 220, 240, 0.65);
     }
+
     .filter-dot {
-      width: 8px; height: 8px;
+      width: 8px;
+      height: 8px;
       border-radius: 50%;
       background: #00c4ff;
       flex-shrink: 0;
       animation: blink 2s ease infinite;
     }
-    .active-filter-banner strong { color: #00c4ff; }
+
+    .active-filter-banner strong {
+      color: #00c4ff;
+    }
+
     .filter-reset-btn {
       margin-left: auto;
       background: none;
-      border: 1px solid rgba(0,196,255,0.2);
+      border: 1px solid rgba(0, 196, 255, 0.2);
       color: #00c4ff;
       border-radius: 8px;
       padding: 4px 12px;
@@ -347,7 +527,32 @@
       cursor: pointer;
       transition: all 0.2s;
     }
-    .filter-reset-btn:hover { background: rgba(0,196,255,0.1); }
+
+    .filter-reset-btn:hover {
+      background: rgba(0, 196, 255, 0.1);
+    }
+
+    .back-style-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: none;
+      border: 1px solid rgba(0, 196, 255, 0.2);
+      color: #00c4ff;
+      border-radius: 99px;
+      padding: 10px 20px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      letter-spacing: 0.04em;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+
+    .back-style-btn:hover {
+      background: rgba(0, 196, 255, 0.08);
+      border-color: rgba(0, 196, 255, 0.4);
+    }
   </style>
 </head>
 
@@ -430,6 +635,11 @@
 
     <main>
       <h1>Articles</h1>
+      <div style="margin-bottom: 24px;">
+        <button onclick="location.reload()" class="back-style-btn">
+          ← Change reading style
+        </button>
+      </div>
       <p class="text-muted mb-md">All Neptune Privacy articles — quick guides or deep external reads.</p>
 
       <div id="activeFilterBanner" class="active-filter-banner" style="display:none;">
@@ -491,13 +701,13 @@
       }
 
       const contentFilter = document.getElementById('contentFilter');
-      if (type === 'long')       contentFilter.value = 'long';
+      if (type === 'long') contentFilter.value = 'long';
       else if (type === 'short') contentFilter.value = 'short';
-      else                       contentFilter.value = 'all';
+      else contentFilter.value = 'all';
 
       if (type !== 'all') {
         const banner = document.getElementById('activeFilterBanner');
-        const label  = document.getElementById('activeFilterLabel');
+        const label = document.getElementById('activeFilterLabel');
         banner.style.display = 'flex';
         label.textContent = type === 'long'
           ? 'Deep Dives — Twitter & Medium reads'

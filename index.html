@@ -108,6 +108,12 @@
         <p class="text-muted">Loading articles…</p>
       </div>
     </section>
+
+    <!-- Featured Videos -->
+    <section class="featured-content">
+      <h2>Featured Videos</h2>
+      <div class="grid" id="featuredVideosGrid"></div>
+    </section>
     <!-- Key Features -->
     <section class="featured-content">
       <h2>Key Features</h2>
@@ -197,26 +203,24 @@
     document.addEventListener('DOMContentLoaded', async function () {
       await loadFirebaseArticlesIfAvailable();
 
-      // Update article count
+      // Article count
       const count = loadArticles().length;
       document.getElementById('articlesCount').textContent = count;
 
-      // Featured articles — show 3: mix of Firebase uploads + defaults
+      // Video count
+      document.getElementById('videosCount').textContent = videos.length;
+
+      // Featured articles — up to 2 Firebase + 1 default
       const all = loadArticles();
-      const firebase = all.filter(a => a.firebaseId); // uploaded ones
-      const defaults = all.filter(a => !a.firebaseId); // built-in ones
+      const firebaseArticles = all.filter(a => a.firebaseId);
+      const defaultArticles = all.filter(a => !a.firebaseId);
+      const featured = [...firebaseArticles.slice(0, 2), ...defaultArticles.slice(0, 1)].slice(0, 3);
+      const toShow = featured.length >= 1 ? featured : defaultArticles.slice(0, 3);
+      document.getElementById('featuredArticlesGrid').innerHTML = toShow.map(createArticleCard).join('');
 
-      // Take up to 2 from Firebase (newest), 1 from defaults, total 3
-      const featured = [
-        ...firebase.slice(0, 2),
-        ...defaults.slice(0, 1)
-      ].slice(0, 3);
-
-      // If no Firebase articles yet, just show 3 defaults
-      const toShow = featured.length >= 1 ? featured : defaults.slice(0, 3);
-
-      document.getElementById('featuredArticlesGrid').innerHTML =
-        toShow.map(createArticleCard).join('');
+      // Featured videos — 3 YouTube only
+      const featuredVideos = videos.filter(v => v.type === 'youtube').slice(0, 3);
+      document.getElementById('featuredVideosGrid').innerHTML = featuredVideos.map(createVideoCard).join('');
     });
   </script>
 </body>
