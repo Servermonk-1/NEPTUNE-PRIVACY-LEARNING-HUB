@@ -9,6 +9,7 @@
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/10.7.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.2/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.2/firebase-auth-compat.js"></script>
 </head>
 
 <body>
@@ -17,14 +18,13 @@
   <div id="loginOverlay" class="login-overlay">
     <div class="login-form">
       <h2>Admin Access</h2>
-      <p class="text-muted">Enter password to manage content</p>
-      <input type="password" id="adminPassword" placeholder="Admin password"
-        onkeypress="if(event.key==='Enter')login()">
-      <button class="login-button" onclick="login()">Access Panel</button>
-      <div id="loginError" class="login-error" style="display:none;">Incorrect password. Try again.</div>
+      <p class="text-muted">Sign in with your admin account</p>
+      <input type="email" id="adminEmail" placeholder="Admin email" onkeypress="if(event.key==='Enter')login()">
+      <input type="password" id="adminPassword" placeholder="Password" onkeypress="if(event.key==='Enter')login()">
+      <button class="login-button" onclick="login()">Sign In</button>
+      <div id="loginError" class="login-error" style="display:none;">Incorrect email or password.</div>
     </div>
   </div>
-
   <!-- Admin Panel -->
   <div id="mainContent" class="main-content">
     <div id="notification" class="notification"></div>
@@ -43,7 +43,11 @@
             <li><a href="quiz.html">Quiz</a></li>
             <li><a href="roadmap.html">Roadmap</a></li>
             <li><a href="about.html">About</a></li>
+            <li><button onclick="logout()"
+                style="background:rgba(255,92,92,0.15);color:#ff5c5c;border:1px solid rgba(255,92,92,0.3);padding:8px 16px;border-radius:6px;cursor:pointer;font-weight:600;font-size:0.85rem;">Sign
+                Out</button></li>
           </ul>
+
         </nav>
       </div>
     </header>
@@ -178,11 +182,9 @@
   <script src="js/main.js"></script>
   <script src="js/articles.js"></script>
   <script>
-    const ADMIN_PASSWORD = 'Neptune2026';
     let editingFirebaseId = null; // tracks which Firebase doc we're editing
 
     async function init() {
-      if (!sessionStorage.getItem('adminAuth')) return;
       document.getElementById('mainContent').classList.add('authenticated');
       document.getElementById('articleForm').addEventListener('submit', handleSubmit);
       toggleFields();
@@ -190,31 +192,44 @@
       renderList();
       renderFeedback();
     }
-
     // ── Auth ───────────────────────────────────────────────
     function login() {
-      const pw = document.getElementById('adminPassword').value;
+      const email = document.getElementById('adminEmail').value.trim();
+      const password = document.getElementById('adminPassword').value;
       const err = document.getElementById('loginError');
-      if (pw === ADMIN_PASSWORD) {
-        sessionStorage.setItem('adminAuth', '1');
-        document.getElementById('loginOverlay').style.display = 'none';
-        document.getElementById('mainContent').classList.add('authenticated');
-        err.style.display = 'none';
-        init();
-      } else {
-        err.style.display = 'block';
-        document.getElementById('adminPassword').value = '';
-      }
+
+      firebase.auth().signInWithEmailAndPassword(email, password)
+        .then(() => {
+          document.getElementById('loginOverlay').style.display = 'none';
+          document.getElementById('mainContent').classList.add('authenticated');
+          err.style.display = 'none';
+          init();
+        })
+        .catch(() => {
+          err.style.display = 'block';
+          err.textContent = 'Incorrect email or password. Try again.';
+          document.getElementById('adminPassword').value = '';
+        });
+    }
+
+    function logout() {
+      firebase.auth().signOut().then(() => {
+        location.reload();
+      });
     }
 
     document.addEventListener('DOMContentLoaded', function () {
-      if (sessionStorage.getItem('adminAuth') === '1') {
-        document.getElementById('loginOverlay').style.display = 'none';
-        document.getElementById('mainContent').classList.add('authenticated');
-        init();
-      } else {
-        setTimeout(() => document.getElementById('adminPassword').focus(), 100);
-      }
+      firebase.auth().onAuthStateChanged(user => {
+        if (user) {
+          document.getElementById('loginOverlay').style.display = 'none';
+          document.getElementById('mainContent').classList.add('authenticated');
+          init();
+        } else {
+          document.getElementById('loginOverlay').style.display = 'flex';
+          document.getElementById('mainContent').classList.remove('authenticated');
+          setTimeout(() => document.getElementById('adminEmail').focus(), 100);
+        }
+      });
     });
 
     // ── Field visibility ───────────────────────────────────
@@ -365,31 +380,47 @@
       toggleFields();
     }
 
-    // ── Feedback (still localStorage — no Firebase collection for it) ──
-    function renderFeedback() {
+    // ── Feedback (now reads from Firestore) ──
+    async function renderFeedback() {
       const container = document.getElementById('feedbackContainer');
-      const all = JSON.parse(localStorage.getItem('neptune_feedback') || '[]');
-      if (!all.length) { container.innerHTML = '<p class="no-feedback">No feedback yet.</p>'; return; }
-      container.innerHTML = all.sort((a, b) => b.id - a.id).map(f => `
-    <div class="feedback-item">
-      <div class="feedback-item-header">
-        <div>
-          <span class="feedback-type-badge">${f.type}</span>
-          <span class="feedback-time">${f.timestamp}</span>
-          <div class="feedback-item-name">${f.name}</div>
-          ${f.email !== 'Not provided' ? `<a href="mailto:${f.email}" class="feedback-item-email">${f.email}</a>` : ''}
-        </div>
-        <button class="feedback-delete-btn" onclick="deleteFeedback(${f.id})">Delete</button>
-      </div>
-      <div class="feedback-item-message">${f.message}</div>
-    </div>`).join('');
+      container.innerHTML = '<p class="text-muted">Loading feedback...</p>';
+      try {
+        const snapshot = await db.collection('feedback').orderBy('createdAt', 'desc').get();
+        if (snapshot.empty) {
+          container.innerHTML = '<p class="no-feedback">No feedback yet.</p>';
+          return;
+        }
+        container.innerHTML = snapshot.docs.map(doc => {
+          const f = { ...doc.data(), docId: doc.id };
+          return `
+        <div class="feedback-item">
+          <div class="feedback-item-header">
+            <div>
+              <span class="feedback-type-badge">${f.type}</span>
+              <span class="feedback-time">${f.timestamp}</span>
+              <div class="feedback-item-name">${f.name}</div>
+              ${f.email !== 'Not provided' ? `<a href="mailto:${f.email}" class="feedback-item-email">${f.email}</a>` : ''}
+            </div>
+            <button class="feedback-delete-btn" onclick="deleteFeedback('${f.docId}')">Delete</button>
+          </div>
+          <div class="feedback-item-message">${f.message}</div>
+        </div>`;
+        }).join('');
+      } catch (error) {
+        console.error('Error loading feedback:', error);
+        container.innerHTML = '<p class="no-feedback">Failed to load feedback.</p>';
+      }
     }
-
-    function deleteFeedback(id) {
+    async function deleteFeedback(docId) {
       if (!confirm('Delete this feedback?')) return;
-      const all = JSON.parse(localStorage.getItem('neptune_feedback') || '[]');
-      localStorage.setItem('neptune_feedback', JSON.stringify(all.filter(f => f.id !== id)));
-      renderFeedback();
+      try {
+        await db.collection('feedback').doc(docId).delete();
+        notify('Feedback deleted.', 'info');
+        renderFeedback();
+      } catch (error) {
+        console.error('Error deleting feedback:', error);
+        notify('Failed to delete feedback.', 'error');
+      }
     }
 
     // ── Notifications ──────────────────────────────────────

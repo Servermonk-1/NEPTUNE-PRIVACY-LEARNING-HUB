@@ -16,7 +16,7 @@ function animateCounter(el, target, duration = 1200) {
 
 function updateCounters() {
   const articles = typeof loadArticles === 'function' ? loadArticles() : [];
-  const vids     = typeof videos !== 'undefined' ? videos : [];
+  const vids = typeof videos !== 'undefined' ? videos : [];
   const aEl = document.getElementById('articlesCount');
   const vEl = document.getElementById('videosCount');
   if (aEl) animateCounter(aEl, articles.length);
@@ -40,24 +40,43 @@ function initScrollReveal() {
 function initFeedbackForm() {
   const form = document.getElementById('feedbackForm');
   if (!form) return;
-  form.addEventListener('submit', function(e) {
+  form.addEventListener('submit', async function (e) {
     e.preventDefault();
-    const type    = document.getElementById('feedbackType')?.value;
+    const type = document.getElementById('feedbackType')?.value;
     const message = document.getElementById('feedbackMessage')?.value?.trim();
-    const name    = document.getElementById('feedbackName')?.value?.trim() || 'Anonymous';
-    const email   = document.getElementById('feedbackEmail')?.value?.trim() || 'Not provided';
+    const name = document.getElementById('feedbackName')?.value?.trim() || 'Anonymous';
+    const email = document.getElementById('feedbackEmail')?.value?.trim() || 'Not provided';
     if (!type || !message) return;
-    const all = JSON.parse(localStorage.getItem('neptune_feedback') || '[]');
-    all.push({ id: Date.now(), type, message, name, email, timestamp: new Date().toLocaleString() });
-    localStorage.setItem('neptune_feedback', JSON.stringify(all));
+
     const status = document.getElementById('feedbackStatus');
-    if (status) {
-      status.style.display = 'block';
-      status.textContent = '✅ Thank you! Your feedback has been submitted.';
-      status.style.color = '#00b894';
+
+    try {
+      // Save to Firestore instead of localStorage
+      await db.collection('feedback').add({
+        type,
+        message,
+        name,
+        email,
+        timestamp: new Date().toLocaleString(),
+        createdAt: new Date()
+      });
+
+      if (status) {
+        status.style.display = 'block';
+        status.textContent = '✅ Thank you! Your feedback has been submitted.';
+        status.style.color = '#00b894';
+      }
+      form.reset();
+      setTimeout(() => { if (status) status.style.display = 'none'; }, 4000);
+
+    } catch (error) {
+      console.error('Feedback save failed:', error);
+      if (status) {
+        status.style.display = 'block';
+        status.textContent = '❌ Something went wrong. Please try again.';
+        status.style.color = '#ff5c5c';
+      }
     }
-    form.reset();
-    setTimeout(() => { if (status) status.style.display = 'none'; }, 4000);
   });
 }
 
@@ -72,7 +91,7 @@ function initSearch() {
 // ── Mobile nav ─────────────────────────────────────────────
 function initMobileNav() {
   const toggle = document.getElementById('navToggle');
-  const nav    = document.querySelector('nav ul');
+  const nav = document.querySelector('nav ul');
   if (toggle && nav) {
     toggle.addEventListener('click', () => nav.classList.toggle('open'));
   }
@@ -94,8 +113,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function type() {
       const phrase = phrases[pi];
       typingEl.textContent = deleting ? phrase.slice(0, ci--) : phrase.slice(0, ci++);
-      if (!deleting && ci > phrase.length)     { deleting = true; setTimeout(type, 1500); return; }
-      if (deleting  && ci < 0)                 { deleting = false; pi = (pi + 1) % phrases.length; }
+      if (!deleting && ci > phrase.length) { deleting = true; setTimeout(type, 1500); return; }
+      if (deleting && ci < 0) { deleting = false; pi = (pi + 1) % phrases.length; }
       setTimeout(type, deleting ? 40 : 80);
     }
     type();
