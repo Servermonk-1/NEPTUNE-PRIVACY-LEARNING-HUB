@@ -1,83 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quiz - Neptune Privacy</title>
-  <link rel="stylesheet" href="css/style.css">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Quiz - Neptune Privacy</title>
+	<link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
-  <header>
-    <div class="header-container">
-      <a href="index.html" class="logo">Neptune Privacy</a>
-      <nav>
-        <button id="navToggle" class="nav-toggle" aria-label="Open navigation">
-          <span></span><span></span><span></span>
-        </button>
-        <ul>
-          <li><a href="articles.html">Articles</a></li>
-          <li><a href="videos.html">Videos</a></li>
-          <li><a href="features.html">Features</a></li>
-          <li><a href="learn.html">Learn</a></li>
-          <li><a href="quiz.html" class="active">Quiz</a></li>
-          <li><a href="about.html">About</a></li>
-        </ul>
-      </nav>
-    </div>
-  </header>
+	<header>
+		<div class="header-container">
+			<a href="index.html" class="logo">Neptune Privacy</a>
+			<nav>
+				<button id="navToggle" class="nav-toggle" aria-label="Open navigation">
+					<span></span><span></span><span></span>
+				</button>
+				<ul>
+					<li><a href="articles.html">Articles</a></li>
+					<li><a href="videos.html">Videos</a></li>
+					<li><a href="features.html">Features</a></li>
+					<li><a href="learn.html">Learn</a></li>
+					<li><a href="quiz.html" class="active">Quiz</a></li>
+					<li><a href="about.html">About</a></li>
+				</ul>
+			</nav>
+		</div>
+	</header>
 
-  <main>
-    <section class="hero-section mt-lg text-center">
-      <div class="page-intro">
-        <p class="eyebrow">Neptune Academy</p>
-        <h1>Privacy & Blockchain Quiz</h1>
-        <p class="text-muted mb-md">Take a Harvard-grade knowledge check across Beginner, Intermediate, and Advanced concepts in privacy blockchain.</p>
-      </div>
-    </section>
+	<main>
+		<section class="hero-section mt-lg text-center">
+			<div class="page-intro">
+				<p class="eyebrow">Neptune Academy</p>
+				<h1>Privacy & Blockchain Quiz</h1>
+				<p class="text-muted mb-md">Take a Harvard-grade knowledge check across Beginner, Intermediate, and
+					Advanced concepts in privacy blockchain.</p>
+			</div>
+		</section>
 
-    <section class="quiz-panel">
-      <div class="quiz-settings">
-        <div>
-          <label for="difficultyFilter">Select difficulty:</label>
-          <select id="difficultyFilter">
-            <option value="all">All Levels</option>
-            <option value="Beginner">Beginner</option>
-            <option value="Intermediate">Intermediate</option>
-            <option value="Advanced">Advanced</option>
-          </select>
-        </div>
-        <div>
-          <span class="quiz-count">Questions: <strong id="questionCount">20</strong></span>
-        </div>
-      </div>
+		<section class="quiz-panel">
+			<div class="quiz-settings">
+				<div>
+					<label for="difficultyFilter">Select difficulty:</label>
+					<select id="difficultyFilter">
+						<option value="all">All Levels</option>
+						<option value="Beginner">Beginner</option>
+						<option value="Intermediate">Intermediate</option>
+						<option value="Advanced">Advanced</option>
+					</select>
+				</div>
+				<div>
+					<span class="quiz-count">Questions: <strong id="questionCount">20</strong></span>
+				</div>
+			</div>
 
-      <form id="quizForm" class="quiz-form">
-        <div id="quizQuestions"></div>
+			<form id="quizForm" class="quiz-form">
+				<div id="quizQuestions"></div>
 
-        <div class="quiz-actions">
-          <button type="submit" class="button primary">Submit Answers</button>
-          <button type="button" id="resetQuiz" class="button secondary">Reset Quiz</button>
-        </div>
-      </form>
+				<div class="quiz-actions">
+					<button type="submit" class="button primary">Submit Answers</button>
+					<button type="button" id="resetQuiz" class="button secondary">Reset Quiz</button>
+				</div>
+			</form>
 
-      <div id="quizResults" class="quiz-results" hidden>
-        <h2>Quiz Results</h2>
-        <p id="quizSummary"></p>
-        <div id="quizFeedback" class="quiz-feedback"></div>
-      </div>
-    </section>
-  </main>
+			<div id="quizResults" class="quiz-results" hidden>
+				<h2>Quiz Results</h2>
+				<p id="quizSummary"></p>
+				<div id="quizFeedback" class="quiz-feedback"></div>
+			</div>
+		</section>
+	</main>
 
-  <footer>
-    <p><strong>Neptune Privacy</strong> — "Privacy Unchained"</p>
-    <div class="footer-links">
-      <a href="https://twitter.com/NeptunePrivacy" target="_blank">Twitter</a>
-      <a href="https://github.com/neptune-privacy" target="_blank">GitHub</a>
-      <a href="about.html">About Us</a>
-    </div>
-  </footer>
+	<footer>
+		<p><strong>Neptune Privacy</strong> — "Privacy Unchained"</p>
+		<div class="footer-links">
+			<a href="https://twitter.com/NeptunePrivacy" target="_blank">Twitter</a>
+			<a href="https://github.com/neptuneprivacy" target="_blank">GitHub</a>
+			<a href="about.html">About Us</a>
+		</div>
+	</footer>
 
-  <script src="js/main.js"></script>
-  <script src="js/quiz.js"></script>
+	<script src="js/main.js"></script>
+	<script src="js/quiz.js"></script>
 </body>
+
 </html>
