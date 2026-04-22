@@ -70,24 +70,61 @@
             <div class="stat-number" id="articlesCount">0</div>
             <div class="stat-label">Articles</div>
           </div>
-
           <div class="stat-item">
             <div class="stat-number" id="videosCount">0</div>
             <div class="stat-label">Videos</div>
           </div>
-          <!-- XNT Price Ticker — place after .hero-stats div -->
-          <div class="xnt-ticker">
-            <div class="xnt-ticker-inner">
-              <div class="xnt-live-dot"></div>
-              <span class="xnt-label">$XNT / USDT</span>
-              <span class="xnt-price" id="xntPrice">Loading...</span>
-              <span class="xnt-change" id="xntChange"></span>
-              <span class="xnt-vol" id="xntVol"></span>
-              <a href="https://www.mexc.com/exchange/XNT_USDT" target="_blank" class="xnt-trade-btn">Trade on MEXC</a>
-            </div>
-            <div class="xnt-updated" id="xntUpdated"></div>
-          </div>
         </div>
+        <!-- XNT Price Ticker -->
+        <div class="xnt-ticker">
+          <div class="xnt-ticker-inner">
+            <div class="xnt-live-dot"></div>
+            <span class="xnt-label">$XNT / USDT</span>
+            <span class="xnt-price" id="xntPrice">Loading...</span>
+            <span class="xnt-change" id="xntChange"></span>
+            <span class="xnt-vol" id="xntVol"></span>
+            <a href="https://www.mexc.com/exchange/XNT_USDT" target="_blank" class="xnt-trade-btn">Trade on MEXC</a>
+          </div>
+          <div class="xnt-updated" id="xntUpdated"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Buy XNT Banner -->
+    <section class="buy-xnt-banner">
+      <div class="buy-xnt-left">
+        <div class="buy-xnt-eyebrow">Now Live on MEXC</div>
+        <h2 class="buy-xnt-title">Ready to buy <span>$XNT</span>?</h2>
+        <p class="buy-xnt-desc">XNT is now listed on MEXC, one of the world's leading crypto exchanges. Get your XNT today and be part of the quantum-safe privacy revolution.</p>
+      </div>
+      <div class="buy-xnt-right">
+        <div class="buy-xnt-buttons">
+          <a href="https://www.mexc.com/exchange/XNT_USDT" target="_blank" class="buy-btn-primary">
+            Buy on MEXC
+          </a>
+          <a href="https://www.safetrade.io" target="_blank" class="buy-btn-secondary">
+            SafeTrade
+          </a>
+        </div>
+        <p class="buy-xnt-note">Always do your own research before investing.</p>
+      </div>
+    </section>
+
+    <!-- Price Chart -->
+    <section class="chart-section">
+      <div class="chart-header">
+        <h2>XNT / USDT Price Chart</h2>
+        <span class="chart-badge">Live via MEXC</span>
+      </div>
+      <div class="chart-wrapper">
+        <iframe
+          src="https://www.mexc.com/trade/XNT_USDT?widget=true&theme=dark"
+          width="100%"
+          height="480"
+          frameborder="0"
+          style="display:block;"
+          title="XNT/USDT Price Chart">
+        </iframe>
       </div>
     </section>
 
@@ -108,12 +145,12 @@
         </div>
         <div class="card">
           <h3>Stay Updated</h3>
-          <p>Get the latest Neptune Privacy news, features, and developments. Your go-to source for everything Neptune.
-          </p>
+          <p>Get the latest Neptune Privacy news, features, and developments. Your go-to source for everything Neptune.</p>
           <div class="card-meta"><span class="badge badge-category">Updates</span></div>
         </div>
       </div>
     </section>
+
     <!-- Featured Articles -->
     <section class="featured-content">
       <h2>Featured Articles</h2>
@@ -127,6 +164,7 @@
       <h2>Featured Videos</h2>
       <div class="grid" id="featuredVideosGrid"></div>
     </section>
+
     <!-- Key Features -->
     <section class="featured-content">
       <h2>Key Features</h2>
@@ -164,7 +202,7 @@
       <div class="grid">
         <a href="learn.html" class="card" style="text-decoration:none;color:inherit;">
           <h3>Start Learning</h3>
-          <p>Beginner → Intermediate → Advanced. Choose your learning path.</p>
+          <p>Beginner to Advanced. Choose your learning path.</p>
         </a>
         <a href="articles.html" class="card" style="text-decoration:none;color:inherit;">
           <h3>Read Articles</h3>
@@ -180,13 +218,10 @@
     <!-- Feedback -->
     <section class="featured-content feedback-section">
       <h2 class="section-title">Send Us Your Feedback</h2>
-      <p class="text-center text-muted mb-md">Help us improve. Your feedback is valuable to the Neptune Privacy
-        community.</p>
+      <p class="text-center text-muted mb-md">Help us improve. Your feedback is valuable to the Neptune Privacy community.</p>
       <form id="feedbackForm" class="feedback-form">
-        <div class="form-group"><input type="text" id="feedbackName" placeholder="Your Name (optional)" maxlength="100">
-        </div>
-        <div class="form-group"><input type="email" id="feedbackEmail" placeholder="Your Email (optional)"
-            maxlength="100"></div>
+        <div class="form-group"><input type="text" id="feedbackName" placeholder="Your Name (optional)" maxlength="100"></div>
+        <div class="form-group"><input type="email" id="feedbackEmail" placeholder="Your Email (optional)" maxlength="100"></div>
         <div class="form-group">
           <select id="feedbackType" required>
             <option value="">Select Feedback Type</option>
@@ -196,8 +231,7 @@
             <option value="General">General Feedback</option>
           </select>
         </div>
-        <div class="form-group"><textarea id="feedbackMessage" placeholder="Your feedback..." required maxlength="1000"
-            rows="5"></textarea></div>
+        <div class="form-group"><textarea id="feedbackMessage" placeholder="Your feedback..." required maxlength="1000" rows="5"></textarea></div>
         <button type="submit" class="feedback-submit-btn">Send Feedback</button>
         <div id="feedbackStatus" style="display:none;margin-top:10px;"></div>
       </form>
@@ -209,6 +243,7 @@
     <p>Your comprehensive guide to mastering Neptune Privacy</p>
     <p style="margin-top:8px;font-size:0.8rem;opacity:0.6;">Built with ❤️ by the Neptune Privacy community</p>
   </footer>
+
   <script src="js/articles.js"></script>
   <script src="js/videos.js"></script>
   <script src="js/main.js"></script>
@@ -226,7 +261,7 @@
       // Featured articles — up to 2 Firebase + 1 default
       const all = loadArticles();
       const firebaseArticles = all.filter(a => a.firebaseId);
-      const defaultArticles = all.filter(a => !a.firebaseId);
+      const defaultArticles  = all.filter(a => !a.firebaseId);
       const featured = [...firebaseArticles.slice(0, 2), ...defaultArticles.slice(0, 1)].slice(0, 3);
       const toShow = featured.length >= 1 ? featured : defaultArticles.slice(0, 3);
       document.getElementById('featuredArticlesGrid').innerHTML = toShow.map(createArticleCard).join('');
