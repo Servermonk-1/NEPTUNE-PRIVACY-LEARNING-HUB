@@ -51,7 +51,6 @@ function initFeedbackForm() {
     const status = document.getElementById('feedbackStatus');
 
     try {
-      // Save to Firestore instead of localStorage
       await db.collection('feedback').add({
         type,
         message,
@@ -97,6 +96,41 @@ function initMobileNav() {
   }
 }
 
+// ── XNT Price Ticker ───────────────────────────────────────
+async function fetchXNTPrice() {
+  const priceEl = document.getElementById('xntPrice');
+  const changeEl = document.getElementById('xntChange');
+  const volEl = document.getElementById('xntVol');
+  const updatedEl = document.getElementById('xntUpdated');
+
+  if (!priceEl) return; // not on a page that has the ticker
+
+  try {
+    const res = await fetch('/api/xnt-price');
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const d = await res.json();
+
+    if (!d.lastPrice) throw new Error('No data');
+
+    const price = parseFloat(d.lastPrice);
+    const change = parseFloat(d.priceChangePercent);
+    const vol = parseFloat(d.quoteVolume);
+    const fmtVol = vol >= 1e6 ? '$' + (vol / 1e6).toFixed(2) + 'M'
+      : vol >= 1e3 ? '$' + (vol / 1e3).toFixed(1) + 'K'
+        : '$' + vol.toFixed(0);
+
+    priceEl.textContent = '$' + price.toFixed(6);
+    changeEl.textContent = (change >= 0 ? '▲ +' : '▼ ') + Math.abs(change).toFixed(2) + '%';
+    changeEl.className = 'xnt-change ' + (change >= 0 ? 'up' : 'down');
+    volEl.textContent = 'Vol: ' + fmtVol;
+    if (updatedEl) updatedEl.textContent = 'Updated ' + new Date().toLocaleTimeString();
+
+  } catch (e) {
+    console.error('XNT price fetch failed:', e);
+    if (priceEl) priceEl.textContent = 'unavailable';
+  }
+}
+
 // ── Init ───────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   updateCounters();
@@ -104,6 +138,10 @@ document.addEventListener('DOMContentLoaded', () => {
   initFeedbackForm();
   initSearch();
   initMobileNav();
+
+  // XNT Price Ticker — fetch immediately then every 60s
+  fetchXNTPrice();
+  setInterval(fetchXNTPrice, 60000);
 
   // Typing effect on hero
   const typingEl = document.querySelector('.typing-text');
@@ -128,3 +166,4 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 });
+
