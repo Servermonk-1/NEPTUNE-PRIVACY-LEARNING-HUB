@@ -192,10 +192,8 @@
 
     .choice-cards {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(3, 1fr);
       gap: 18px;
-      margin-bottom: 36px;
-      animation: boxIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.4s both;
     }
 
     @media (max-width: 640px) {
@@ -553,6 +551,37 @@
       background: rgba(0, 196, 255, 0.08);
       border-color: rgba(0, 196, 255, 0.4);
     }
+
+    .back-home-btn {
+      background: rgba(0, 196, 255, 0.08);
+      border: 1px solid rgba(0, 196, 255, 0.25);
+      color: #00c4ff;
+      padding: 8px 16px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      backdrop-filter: blur(10px);
+    }
+
+    .back-home-btn:hover {
+      background: rgba(0, 196, 255, 0.15);
+      border-color: rgba(0, 196, 255, 0.5);
+    }
+
+    .overlay-back-wrap {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      z-index: 5;
+    }
+
+    @media (max-width: 640px) {
+      .overlay-back-wrap {
+        top: 14px;
+        left: 14px;
+      }
+    }
   </style>
 </head>
 
@@ -567,6 +596,11 @@
     <div class="choice-box">
       <div style="display:flex;justify-content:center;margin-bottom:28px;">
         <span class="choice-eyebrow">Neptune Privacy — Knowledge Hub</span>
+      </div>
+      <div class="overlay-back-wrap">
+        <button onclick="goHome()" class="back-home-btn">
+          ← Back to Hub
+        </button>
       </div>
 
       <h1 class="choice-title">
@@ -597,6 +631,18 @@
           </p>
           <div class="choice-card-footer">
             <span class="choice-card-tag">⏱ 2–5 min</span>
+            <span class="choice-card-arrow">→</span>
+          </div>
+        </div>
+
+        <div class="choice-card glossary" onclick="goToGlossary()">
+          <div class="card-icon-wrap">📘</div>
+          <div class="choice-card-title">Glossary</div>
+          <p class="choice-card-desc">
+            Quick explanations of Neptune terms like zk-STARKs, Triton VM, and Mutator Sets.
+          </p>
+          <div class="choice-card-footer">
+            <span class="choice-card-tag">📖 Reference</span>
             <span class="choice-card-arrow">→</span>
           </div>
         </div>
@@ -724,7 +770,14 @@
       document.getElementById('activeFilterBanner').style.display = 'none';
       updateArticlesDisplay();
     }
+    function goHome() {
+      window.location.href = "index.html";
+    }
+    function goToGlossary() {
+      window.location.href = "glossary.html";
+    }
   </script>
+
 </body>
 
 </html>

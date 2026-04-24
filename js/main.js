@@ -143,21 +143,28 @@ document.addEventListener('DOMContentLoaded', () => {
   fetchXNTPrice();
   setInterval(fetchXNTPrice, 60000);
 
-  // Typing effect on hero
-  const typingEl = document.querySelector('.typing-text');
-  if (typingEl) {
-    const phrases = ['privacy is automatic.', 'quantum attacks fail.', 'you stay in control.', 'code runs in secret.'];
+  // Typing effect on hero (multi-language)
+  let typingTimeout;
+  function startTypingEffect() {
+    const typingEl = document.querySelector('.typing-text');
+    if (!typingEl) return;
+    clearTimeout(typingTimeout);
+    const lang = (typeof getCurrentLang === 'function') ? getCurrentLang() : 'en';
+    const phrases = (window.translations && window.translations[lang]?.typing) || [
+      'privacy is automatic.', 'quantum attacks fail.', 'you stay in control.', 'code runs in secret.'
+    ];
     let pi = 0, ci = 0, deleting = false;
     function type() {
       const phrase = phrases[pi];
       typingEl.textContent = deleting ? phrase.slice(0, ci--) : phrase.slice(0, ci++);
-      if (!deleting && ci > phrase.length) { deleting = true; setTimeout(type, 1500); return; }
+      if (!deleting && ci > phrase.length) { deleting = true; typingTimeout = setTimeout(type, 1500); return; }
       if (deleting && ci < 0) { deleting = false; pi = (pi + 1) % phrases.length; }
-      setTimeout(type, deleting ? 40 : 80);
+      typingTimeout = setTimeout(type, deleting ? 40 : 80);
     }
     type();
   }
-
+  window.restartTypingEffect = startTypingEffect;
+  startTypingEffect();
   // Auto-refresh when admin saves
   window.addEventListener('storage', e => {
     if (e.key === 'neptune_articles' || e.key === 'neptune_articles_updated') {
@@ -167,3 +174,41 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
+function renderContinueLearning() {
+  const lastId = localStorage.getItem('last_article_id');
+  if (!lastId) return;
+
+  const articles = loadArticles();
+  const lastIndex = articles.findIndex(a => String(a.id) === String(lastId));
+  if (lastIndex === -1) return;
+
+  const lastArticle = articles[lastIndex];
+  const nextArticle = articles[lastIndex + 1] || articles[0];
+
+  document.getElementById('continueLearningSection').style.display = 'block';
+
+  document.getElementById('continueLearningGrid').innerHTML = `
+    <a href="article.html?id=${lastArticle.id}" class="card" style="text-decoration:none;color:inherit;">
+      <h3>Continue Reading</h3>
+      <p>${lastArticle.title}</p>
+      <div class="card-meta"><span class="badge badge-category">Last opened</span></div>
+    </a>
+
+    <a href="article.html?id=${nextArticle.id}" class="card" style="text-decoration:none;color:inherit;">
+      <h3>Recommended Next</h3>
+      <p>${nextArticle.title}</p>
+      <div class="card-meta"><span class="badge badge-category">Next lesson</span></div>
+    </a>
+  `;
+}
+
+function renderQuizBadge() {
+  const badge = localStorage.getItem('neptune_quiz_badge');
+  if (!badge) return;
+
+  document.getElementById('badgeSection').style.display = 'block';
+  document.getElementById('badgeTitle').textContent = badge;
+}
+
+renderContinueLearning();
+renderQuizBadge();

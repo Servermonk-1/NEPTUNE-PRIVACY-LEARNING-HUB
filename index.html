@@ -5,6 +5,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Neptune Privacy Learning Hub</title>
+  <script>
+    (function () {
+      const saved = localStorage.getItem('neptune_theme') || 'dark';
+      document.documentElement.setAttribute('data-theme', saved);
+    })();
+  </script>
   <link rel="stylesheet" href="css/style.css">
   <script src="https://www.gstatic.com/firebasejs/10.7.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.2/firebase-firestore-compat.js"></script>
@@ -34,8 +40,29 @@
           <li><a href="quiz.html">Quiz</a></li>
           <li><a href="roadmap.html">Roadmap</a></li>
           <li><a href="about.html">About</a></li>
-          <li style="margin-left: auto;"><a href="admin.html" class="admin-link"
-              title="THIS IS ONLY FOR ADMINS">Admin</a></li>
+          <li class="nav-controls">
+            <!-- Theme Toggle -->
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+              <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="5" />
+                <line x1="12" y1="1" x2="12" y2="3" />
+                <line x1="12" y1="21" x2="12" y2="23" />
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+                <line x1="1" y1="12" x2="3" y2="12" />
+                <line x1="21" y1="12" x2="23" y2="12" />
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+              </svg>
+              <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+              </svg>
+            </button>
+          </li>
+          <li><a href="admin.html" class="admin-link" title="THIS IS ONLY FOR ADMINS">Admin</a>
+          </li>
         </ul>
       </nav>
     </div>
@@ -58,8 +85,9 @@
           </h1>
         </div>
         <div class="hero-subtitle">
-          <p>Master the <span class="highlight-text">quantum-safe</span> blockchain where <span
-              class="typing-text"></span></p>
+          <p><span>Master the</span> <span class="highlight-text">quantum-safe</span> <span>blockchain where</span>
+            <span class="typing-text"></span>
+          </p>
         </div>
         <div class="hero-actions">
           <a href="learn.html" class="epic-cta primary-cta"><span class="cta-text">Start Your Journey</span></a>
@@ -94,17 +122,15 @@
     <section class="buy-xnt-banner">
       <div class="buy-xnt-left">
         <div class="buy-xnt-eyebrow">Now Live on MEXC</div>
-        <h2 class="buy-xnt-title">Ready to buy <span>$XNT</span>?</h2>
-        <p class="buy-xnt-desc">XNT is now listed on MEXC, one of the world's leading crypto exchanges. Get your XNT today and be part of the quantum-safe privacy revolution.</p>
+        <h2 class="buy-xnt-title"><span>Ready to buy</span> <span>$XNT</span>?</h2>
+        <p class="buy-xnt-desc">XNT is now listed on MEXC, one of the world's leading crypto
+          exchanges. Get your XNT
+          today and be part of the quantum-safe privacy revolution.</p>
       </div>
       <div class="buy-xnt-right">
         <div class="buy-xnt-buttons">
-          <a href="https://www.mexc.com/exchange/XNT_USDT" target="_blank" class="buy-btn-primary">
-            Buy on MEXC
-          </a>
-          <a href="https://www.safetrade.io" target="_blank" class="buy-btn-secondary">
-            SafeTrade
-          </a>
+          <a href="https://www.mexc.com/exchange/XNT_USDT" target="_blank" class="buy-btn-primary">Buy on MEXC</a>
+          <a href="https://www.safetrade.io" target="_blank" class="buy-btn-secondary">SafeTrade</a>
         </div>
         <p class="buy-xnt-note">Always do your own research before investing.</p>
       </div>
@@ -116,19 +142,40 @@
       <div class="grid">
         <div class="card">
           <h3>Learn at Your Own Pace</h3>
-          <p>Structured learning paths from beginner to advanced. Master Neptune Privacy with our comprehensive
+          <p>Structured learning paths from beginner to advanced. Master Neptune Privacy
+            with our comprehensive
             educational content.</p>
           <div class="card-meta"><span class="badge badge-category">Education</span></div>
         </div>
         <div class="card">
           <h3>Expert Community Content</h3>
-          <p>Articles and videos created by Neptune Privacy community experts. Quality content you can trust.</p>
+          <p>Articles and videos created by Neptune Privacy community experts. Quality
+            content you can trust.</p>
           <div class="card-meta"><span class="badge badge-category">Community</span></div>
         </div>
         <div class="card">
           <h3>Stay Updated</h3>
-          <p>Get the latest Neptune Privacy news, features, and developments. Your go-to source for everything Neptune.</p>
+          <p>Get the latest Neptune Privacy news, features, and developments. Your go-to
+            source for everything Neptune.</p>
           <div class="card-meta"><span class="badge badge-category">Updates</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Continue Learning -->
+    <section class="featured-content" id="continueLearningSection" style="display:none;">
+      <h2 class="section-title">Continue Learning</h2>
+      <div class="grid" id="continueLearningGrid"></div>
+    </section>
+
+    <!-- Quiz Achievement -->
+    <section class="featured-content" id="badgeSection" style="display:none;">
+      <h2 class="section-title">Your Achievement</h2>
+      <div class="grid">
+        <div class="card">
+          <h3 id="badgeTitle"></h3>
+          <p>You scored 80% or higher in the Neptune quiz. Keep learning and mastering privacy blockchain.</p>
+          <div class="card-meta"><span class="badge badge-category">Achievement</span></div>
         </div>
       </div>
     </section>
@@ -153,11 +200,13 @@
       <div class="grid">
         <div class="card">
           <h3>Private by Default</h3>
-          <p>Every transaction is automatically private. No settings, no opt-in, no compromises.</p>
+          <p>Every transaction is automatically private. No settings, no opt-in, no
+            compromises.</p>
         </div>
         <div class="card">
           <h3>Quantum Resistant</h3>
-          <p>Hash-based cryptography designed to withstand quantum-level attacks today and tomorrow.</p>
+          <p>Hash-based cryptography designed to withstand quantum-level attacks today and
+            tomorrow.</p>
         </div>
         <div class="card">
           <h3>Proof of Work</h3>
@@ -165,15 +214,18 @@
         </div>
         <div class="card">
           <h3>Smart Contracts</h3>
-          <p>Program with full privacy via Triton VM. Inputs, outputs, and logic stay hidden.</p>
+          <p>Program with full privacy via Triton VM. Inputs, outputs, and logic stay
+            hidden.</p>
         </div>
         <div class="card">
           <h3>Community Governed</h3>
-          <p>No CEO, no VC backing, 100% open source. Neptune is built by and for the community.</p>
+          <p>No CEO, no VC backing, 100% open source. Neptune is built by and for the
+            community.</p>
         </div>
         <div class="card">
           <h3>Fair Economics</h3>
-          <p>No presale, no insider allocation. 100% of supply beyond premine goes to miners.</p>
+          <p>No presale, no insider allocation. 100% of supply beyond premine goes to
+            miners.</p>
         </div>
       </div>
     </section>
@@ -197,13 +249,112 @@
       </div>
     </section>
 
+    <section class="featured-content">
+      <h2 class="section-title">Why Neptune Stands Apart</h2>
+      <div class="comparison-wrapper">
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th class="neptune-col">Neptune</th>
+              <th>Monero</th>
+              <th>Zcash</th>
+              <th>Bitcoin</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Private by Default</td>
+              <td class="neptune-col">✅</td>
+              <td>✅</td>
+              <td>❌</td>
+              <td>❌</td>
+            </tr>
+            <tr>
+              <td>Quantum Resistant</td>
+              <td class="neptune-col">✅</td>
+              <td>❌</td>
+              <td>❌</td>
+              <td>❌</td>
+            </tr>
+            <tr>
+              <td>Smart Contracts</td>
+              <td class="neptune-col">✅</td>
+              <td>❌</td>
+              <td>❌</td>
+              <td>❌</td>
+            </tr>
+            <tr>
+              <td>Proof of Work</td>
+              <td class="neptune-col">✅</td>
+              <td>✅</td>
+              <td>✅</td>
+              <td>✅</td>
+            </tr>
+            <tr>
+              <td>No Presale/VCs</td>
+              <td class="neptune-col">✅</td>
+              <td>✅</td>
+              <td>❌</td>
+              <td>✅</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="featured-content">
+      <h2 class="section-title">Common Questions</h2>
+      <div class="faq-list">
+        <details class="faq-item">
+          <summary>What makes Neptune quantum-resistant?</summary>
+          <p>Neptune uses hash-based cryptography (specifically STARK proofs) instead of elliptic curves, meaning even a
+            full-scale quantum computer can't break it.</p>
+        </details>
+        <details class="faq-item">
+          <summary>How do I mine XNT?</summary>
+          <p>Neptune is GPU-mineable. Download the official miner, point it at a pool or solo mine, and start earning
+            block rewards.</p>
+        </details>
+        <details class="faq-item">
+          <summary>Is Neptune truly private?</summary>
+          <p>Yes. Unlike Zcash (optional privacy), every Neptune transaction is private by default — amounts, senders,
+            and receivers are all hidden.</p>
+        </details>
+        <details class="faq-item">
+          <summary>Where can I buy XNT?</summary>
+          <p>XNT is listed on MEXC and SafeTrade. Always verify URLs and do your own research.</p>
+        </details>
+        <details class="faq-item">
+          <summary>How can I contact the team members</summary>
+          <p>Join the discord channel and open a ticket. You will be attended to.</p>
+        </details>
+      </div>
+    </section>
+
+    <section class="community-cta">
+      <div class="community-inner">
+        <h2>Join 10,000+ Neptune Explorers</h2>
+        <p>Get weekly privacy insights, network updates, and community news — straight to your inbox.</p>
+        <div class="community-links">
+          <a href="https://discord.gg/neptuneprivacy" target="_blank" class="community-btn discord">Discord</a>
+          <a href="https://t.me/neptuneprivacy" target="_blank" class="community-btn telegram">Telegram</a>
+          <a href="https://twitter.com/neptuneprivacy" target="_blank" class="community-btn twitter">Twitter</a>
+          <a href="https://github.com/neptuneprivacy" target="_blank" class="community-btn github">GitHub</a>
+        </div>
+      </div>
+    </section>
+
     <!-- Feedback -->
     <section class="featured-content feedback-section">
       <h2 class="section-title">Send Us Your Feedback</h2>
-      <p class="text-center text-muted mb-md">Help us improve. Your feedback is valuable to the Neptune Privacy community.</p>
+      <p class="text-center text-muted mb-md">Help us improve. Your feedback is valuable
+        to the Neptune Privacy community.</p>
       <form id="feedbackForm" class="feedback-form">
-        <div class="form-group"><input type="text" id="feedbackName" placeholder="Your Name (optional)" maxlength="100"></div>
-        <div class="form-group"><input type="email" id="feedbackEmail" placeholder="Your Email (optional)" maxlength="100"></div>
+        <div class="form-group"><input type="text" id="feedbackName" placeholder="Your Name (optional)" maxlength="100">
+        </div>
+        <div class="form-group"><input type="email" id="feedbackEmail" placeholder="Your Email (optional)"
+            maxlength="100"></div>
         <div class="form-group">
           <select id="feedbackType" required>
             <option value="">Select Feedback Type</option>
@@ -213,7 +364,8 @@
             <option value="General">General Feedback</option>
           </select>
         </div>
-        <div class="form-group"><textarea id="feedbackMessage" placeholder="Your feedback..." required maxlength="1000" rows="5"></textarea></div>
+        <div class="form-group"><textarea id="feedbackMessage" placeholder="Your feedback..." required maxlength="1000"
+            rows="5"></textarea></div>
         <button type="submit" class="feedback-submit-btn">Send Feedback</button>
         <div id="feedbackStatus" style="display:none;margin-top:10px;"></div>
       </form>
@@ -223,12 +375,14 @@
   <footer>
     <p><strong>Neptune Privacy Learning Hub</strong></p>
     <p>Your comprehensive guide to mastering Neptune Privacy</p>
-    <p style="margin-top:8px;font-size:0.8rem;opacity:0.6;">Built with ❤️ by the Neptune Privacy community</p>
+    <p style="margin-top:8px;font-size:0.8rem;opacity:0.6;">Built with ❤️ by the Neptune
+      Privacy community</p>
   </footer>
 
   <script src="js/articles.js"></script>
   <script src="js/videos.js"></script>
   <script src="js/main.js"></script>
+  <script src="js/theme.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', async function () {
       await loadFirebaseArticlesIfAvailable();
@@ -243,7 +397,7 @@
       // Featured articles — up to 2 Firebase + 1 default
       const all = loadArticles();
       const firebaseArticles = all.filter(a => a.firebaseId);
-      const defaultArticles  = all.filter(a => !a.firebaseId);
+      const defaultArticles = all.filter(a => !a.firebaseId);
       const featured = [...firebaseArticles.slice(0, 2), ...defaultArticles.slice(0, 1)].slice(0, 3);
       const toShow = featured.length >= 1 ? featured : defaultArticles.slice(0, 3);
       document.getElementById('featuredArticlesGrid').innerHTML = toShow.map(createArticleCard).join('');

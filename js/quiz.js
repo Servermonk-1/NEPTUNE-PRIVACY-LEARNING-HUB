@@ -232,6 +232,12 @@ function handleQuizSubmit(event) {
     `;
   }).join('');
 
+  const percentage = Math.round((score / questions.length) * 100);
+
+  if (percentage >= 80) {
+    localStorage.setItem('neptune_quiz_badge', 'Neptune Certified Learner');
+  }
+
   showQuizResults(score, questions.length, feedback);
 }
 

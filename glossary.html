@@ -4,13 +4,15 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Quiz - Neptune Privacy</title>
+	<title>Glossary - Neptune Privacy</title>
+
 	<script>
 		(function () {
 			const saved = localStorage.getItem('neptune_theme') || 'dark';
 			document.documentElement.setAttribute('data-theme', saved);
 		})();
 	</script>
+
 	<link rel="stylesheet" href="css/style.css">
 </head>
 
@@ -23,12 +25,15 @@
 					<span></span><span></span><span></span>
 				</button>
 				<ul>
+					<li><a href="index.html">Home</a></li>
 					<li><a href="articles.html">Articles</a></li>
 					<li><a href="videos.html">Videos</a></li>
 					<li><a href="features.html">Features</a></li>
 					<li><a href="learn.html">Learn</a></li>
-					<li><a href="quiz.html" class="active">Quiz</a></li>
+					<li><a href="quiz.html">Quiz</a></li>
+					<li><a href="glossary.html" class="active">Glossary</a></li>
 					<li><a href="about.html">About</a></li>
+
 					<li class="nav-controls">
 						<!-- Theme Toggle -->
 						<button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
@@ -56,60 +61,45 @@
 	</header>
 
 	<main>
-		<section class="hero-section mt-lg text-center">
-			<div class="page-intro">
-				<p class="eyebrow">Neptune Academy</p>
-				<h1>Privacy & Blockchain Quiz</h1>
-				<p class="text-muted mb-md">Take a Harvard-grade knowledge check across Beginner, Intermediate, and
-					Advanced concepts in privacy blockchain.</p>
-			</div>
-		</section>
+		<h1>Neptune Glossary</h1>
+		<p class="text-muted mb-md">
+			Simple explanations of important Neptune Privacy terms.
+		</p>
 
-		<section class="quiz-panel">
-			<div class="quiz-settings">
-				<div>
-					<label for="difficultyFilter">Select difficulty:</label>
-					<select id="difficultyFilter">
-						<option value="all">All Levels</option>
-						<option value="Beginner">Beginner</option>
-						<option value="Intermediate">Intermediate</option>
-						<option value="Advanced">Advanced</option>
-					</select>
+		<section class="featured-content">
+			<div class="grid">
+
+				<div class="card">
+					<h3>zk-STARKs</h3>
+					<p>Zero-knowledge proofs that allow Neptune to verify transactions without revealing private
+						details.</p>
 				</div>
-				<div>
-					<span class="quiz-count">Questions: <strong id="questionCount">20</strong></span>
+
+				<div class="card">
+					<h3>Mutator Sets</h3>
+					<p>A privacy structure that lets Neptune track outputs without revealing ownership.</p>
 				</div>
-			</div>
 
-			<form id="quizForm" class="quiz-form">
-				<div id="quizQuestions"></div>
-
-				<div class="quiz-actions">
-					<button type="submit" class="button primary">Submit Answers</button>
-					<button type="button" id="resetQuiz" class="button secondary">Reset Quiz</button>
+				<div class="card">
+					<h3>Triton VM</h3>
+					<p>The private smart contract engine used by Neptune.</p>
 				</div>
-			</form>
 
-			<div id="quizResults" class="quiz-results" hidden>
-				<h2>Quiz Results</h2>
-				<p id="quizSummary"></p>
-				<div id="quizFeedback" class="quiz-feedback"></div>
+				<div class="card">
+					<h3>Tail Emission</h3>
+					<p>A continuous small reward to miners that keeps the network secure long-term.</p>
+				</div>
+
 			</div>
 		</section>
 	</main>
 
 	<footer>
 		<p><strong>Neptune Privacy</strong> — "Privacy Unchained"</p>
-		<div class="footer-links">
-			<a href="https://twitter.com/NeptunePrivacy" target="_blank">Twitter</a>
-			<a href="https://github.com/neptuneprivacy" target="_blank">GitHub</a>
-			<a href="about.html">About Us</a>
-		</div>
 	</footer>
 
 	<script src="js/main.js"></script>
 	<script src="js/theme.js"></script>
-	<script src="js/quiz.js"></script>
 </body>
 
 </html>
