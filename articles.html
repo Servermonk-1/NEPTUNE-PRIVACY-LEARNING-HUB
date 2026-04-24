@@ -19,7 +19,7 @@
       align-items: center;
       justify-content: center;
       padding: 24px;
-      overflow: hidden;
+      overflow: auto;
       animation: overlayIn 0.6s ease both;
     }
 
@@ -483,6 +483,24 @@
       }
     }
 
+    #choiceOverlay {
+      align-items: flex-start;
+    }
+
+    .choice-box {
+      margin: 80px auto 40px;
+    }
+
+    @media (max-width: 640px) {
+      .choice-box {
+        margin: 90px auto 32px;
+      }
+
+      .choice-cards {
+        grid-template-columns: 1fr;
+      }
+    }
+
     #mainArticles {
       display: none;
     }
@@ -569,17 +587,25 @@
       border-color: rgba(0, 196, 255, 0.5);
     }
 
-    .overlay-back-wrap {
-      position: absolute;
-      top: 20px;
-      left: 20px;
-      z-index: 5;
+    .overlay-top-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 28px;
     }
 
     @media (max-width: 640px) {
-      .overlay-back-wrap {
-        top: 14px;
-        left: 14px;
+      .overlay-top-actions {
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 22px;
+      }
+
+      .choice-eyebrow {
+        margin-bottom: 0;
+        text-align: center;
       }
     }
   </style>
@@ -594,13 +620,12 @@
     <div class="orb orb-3"></div>
 
     <div class="choice-box">
-      <div style="display:flex;justify-content:center;margin-bottom:28px;">
-        <span class="choice-eyebrow">Neptune Privacy — Knowledge Hub</span>
-      </div>
-      <div class="overlay-back-wrap">
+      <div class="overlay-top-actions">
         <button onclick="goHome()" class="back-home-btn">
           ← Back to Hub
         </button>
+
+        <span class="choice-eyebrow">Neptune Privacy — Knowledge Hub</span>
       </div>
 
       <h1 class="choice-title">
